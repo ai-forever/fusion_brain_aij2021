@@ -263,9 +263,9 @@ IoU для каждой пары (prediction/true) принимает значе
 
 , где S – итоговая оценка участника, S<sub>baseline</sub> – итоговая оценка бейзлайна, δ = 0.15 – минимальное значение, на которое должна быть превышена итоговая оценка бейзлайна, коэффициент α зависит от места в лидерборде (топ-3 решения) и вычисляется следующим образом:
 
-![image](https://latex.codecogs.com/svg.image?\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)})
+![image](https://latex.codecogs.com/svg.image?\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
 
-, где α<sub>place</sub> – коэффициент для первого, второго и третьего мест в лидерборде (индекс place обозначает место в итоговом лидерборде). MAX<sub>place</sub> – максимальный размер вознаграждения для топ3-решений в лидерборде при S ≥ 2.3 (MAX<sub>1</sub> = 3 млн руб., MAX<sub>2</sub> = 1.5 млн руб., MAX<sub>3</sub> = 0.8 млн руб.). FIX<sub>place</sub> – фиксированная сумма выигрыша для топ-решений в лидерборде при (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). Коэффициент α<sub>place</sub> рассчитывается только для случаев, при которых S<sub>baseline</sub> + δ ≤ S < 2.3 (см. таблицу выше).
+где α<sub>place</sub> – коэффициент для первого, второго и третьего мест в лидерборде (индекс place обозначает место в итоговом лидерборде). MAX<sub>place</sub> – максимальный размер вознаграждения для топ3-решений в лидерборде при S ≥ 2.3 (MAX<sub>1</sub> = 3 млн руб., MAX<sub>2</sub> = 1.5 млн руб., MAX<sub>3</sub> = 0.8 млн руб.). FIX<sub>place</sub> – фиксированная сумма выигрыша для топ-решений в лидерборде при (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). Коэффициент α<sub>place</sub> рассчитывается только для случаев, при которых S<sub>baseline</sub> + δ ≤ S < 2.3 (см. таблицу выше).
 
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot.png)
 
