@@ -63,17 +63,17 @@
 
 CodeBLEU представляет собой взвешенную комбинацию четырех компонент:
 
-![image](https://latex.codecogs.com/svg.image?\textrm{CodeBLEU}&space;=&space;\alpha&space;\cdot&space;\textrm{BLEU}&space;&plus;&space;\beta&space;\cdot&space;\textrm{BLEU}_{weight}&space;&plus;&space;\gamma&space;\cdot&space;\textrm{Match}_{ast}&space;&plus;&space;\delta&space;\cdot&space;\textrm{Match}_{df})
+![image](https://latex.codecogs.com/svg.image?\textrm{CodeBLEU}&space;=&space;\alpha&space;\cdot&space;\textrm{BLEU}&space;&plus;&space;\beta&space;\cdot&space;\textrm{BLEU}_{weight}&space;&plus;&space;\gamma&space;\cdot&space;\textrm{Match}_{ast}&space;&plus;&space;\delta&space;\cdot&space;\textrm{Match}_{df},)
 
-, где BLEU - стандартная метрика BLEU ```Papineni et al., 2002``` , BLEU<sub>weight</sub> - взвешенное сопоставление n-грамм (токены различаются по важности -- и совпадение определённых токенов переведенных и "золотых" функций имеет больший вес), Match<sub>ast</sub> - метрика соответствия деревьев абстрактного синтаксиса переведенного кода и эталонного, Match<sub>df</sub> отражает сходство "потоков данных" функций-гипотез и верных функций.
+где BLEU - стандартная метрика BLEU ```Papineni et al., 2002``` , BLEU<sub>weight</sub> - взвешенное сопоставление n-грамм (токены различаются по важности -- и совпадение определённых токенов переведенных и "золотых" функций имеет больший вес), Match<sub>ast</sub> - метрика соответствия деревьев абстрактного синтаксиса переведенного кода и эталонного, Match<sub>df</sub> отражает сходство "потоков данных" функций-гипотез и верных функций.
 
 Остановимся подробнее на каждой из компонент метрики:
 
 * BLEU основана на подсчете n-грамм, которые встретились и в переводе, и в референсной последовательности; рассчитывается она следующим образом:
 
-![image](https://latex.codecogs.com/svg.image?\textrm{BLEU}&space;=&space;\textrm{BP}&space;\cdot&space;\textrm{exp}&space;(\sum_{n=1}^{N}&space;w_{n}&space;\log&space;p_{n}))
+![image](https://latex.codecogs.com/svg.image?\textrm{BLEU}&space;=&space;\textrm{BP}&space;\cdot&space;\textrm{exp}&space;(\sum_{n=1}^{N}&space;w_{n}&space;\log&space;p_{n}),)
 
-, где BP - штраф за слишком короткие варианты перевода, который считатается как отношение количества токенов в переводе, предложенном моделью, к количеству токенов в эталонной последовательности; вторая часть выражения - среднее геометрическое значений модифицированной точности n-грамм:
+где BP - штраф за слишком короткие варианты перевода, который считатается как отношение количества токенов в переводе, предложенном моделью, к количеству токенов в эталонной последовательности; вторая часть выражения - среднее геометрическое значений модифицированной точности n-грамм:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{n\text{-}gram&space;\in&space;C}&space;Count_{clip}&space;\textrm{(n-gram)}}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{n\text{-}gram\textquotesingle&space;\in&space;C\textquotesingle}&space;Count&space;\textrm{(n-gram\textquotesingle)}})
 
@@ -81,22 +81,22 @@ CodeBLEU представляет собой взвешенную комбина
 
 *  В отличие от стандартной BLEU, в формулу расчета точности сопадения n-грамм для метрики BLEU<sub>weight</sub> включается весовой коэффициент (![image](https://latex.codecogs.com/svg.image?\mu_{n}^{i})), значение которого больше для ключевых слов языка программирования, чем для других токенов:
 
-![image](https://latex.codecogs.com/svg.image?\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count_{clip}&space;(C(i,&space;i&plus;n))}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count&space;(C\textquotesingle(i,&space;i&plus;n))})
+![image](https://latex.codecogs.com/svg.image?\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count_{clip}&space;(C(i,&space;i&plus;n))}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count&space;(C\textquotesingle(i,&space;i&plus;n))},)
 
-, где C(i, i+n) - n-грамм, начинающийся в позиции i и заканчивающийся в позиции i+n;  Count<sub>clip</sub>, как и в случае со стандартной BLEU, - максимальное количество n-грамм, встречающихся как в переведенном коде, так и в наборе эталонных решений.
+где C(i, i+n) - n-грамм, начинающийся в позиции i и заканчивающийся в позиции i+n;  Count<sub>clip</sub>, как и в случае со стандартной BLEU, - максимальное количество n-грамм, встречающихся как в переведенном коде, так и в наборе эталонных решений.
 Список ключевых слов заранее определяется для конкретного языка программирования.
 
 * Синтаксическая структура исходного кода может быть представлена в виде дерева абстрактного синтаксиса (ДАС) - переведенные и эталонные функции, таким образом, можно сравнивать на уровне поддеревьев, полученных с помощью ДАС-парсера. Поскольку нас интересует синтаксическая информация, листья ДАС, в которых находятся переменные функции, не учитываются. Match<sub>ast</sub> рассчитывается по следующей формуле:
 
-![image](https://latex.codecogs.com/svg.image?\textrm{Match}_{ast}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{T}_{cand})}{\textrm{Count}(\textrm{T}_{ref})})
+![image](https://latex.codecogs.com/svg.image?\textrm{Match}_{ast}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{T}_{cand})}{\textrm{Count}(\textrm{T}_{ref})},)
 
-, гдe Count(T<sub>ref</sub>) - общее количество поддеревьев референсного кода, Count<sub>clip</sub>(T<sub>cand</sub>) - количество поддеревьев переведенного кода, совпавших с поддеревьями эталонных функций. Данная метрика позволяет оценить качество получившегося кода с точки зрения синтаксиса.  
+гдe Count(T<sub>ref</sub>) - общее количество поддеревьев референсного кода, Count<sub>clip</sub>(T<sub>cand</sub>) - количество поддеревьев переведенного кода, совпавших с поддеревьями эталонных функций. Данная метрика позволяет оценить качество получившегося кода с точки зрения синтаксиса.  
 
 * Сравнение переведенного кода и референсного на уровне семантики происходит с использованием "потоков данных" (data flow ```Guo et al., 2020``` ) - представлений исходного кода в виде графа, вершины которого - переменные, а грани обозначают своего рода "генетические" отношения между вершинами (выражают информацию о том, откуда берется значение каждой переменной). Формула расчета метрики Match<sub>df</sub> имеет следующий вид:
 
-![image](https://latex.codecogs.com/svg.image?\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})})
+![image](https://latex.codecogs.com/svg.image?\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
 
-, гдe Count(DF<sub>ref</sub>) - общее количество "потоков данных" референсного кода,Count<sub>clip</sub>(DF<sub>cand</sub>) - количество "потоков данных" переведенного кода, совпавших с эталонными.
+гдe Count(DF<sub>ref</sub>) - общее количество "потоков данных" референсного кода,Count<sub>clip</sub>(DF<sub>cand</sub>) - количество "потоков данных" переведенного кода, совпавших с эталонными.
 
 ## Формат решения
 
@@ -139,7 +139,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 [Аннотации](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
 
-**Public.**  Публичный тестовый датасет сформирован из части датасета VisualGenome; он скрыт от участников, так же как и набор классов в нем. 
+**Public.**  Публичный тестовый датасет сформирован из части датасета [VisualGenome](https://visualgenome.org/api/v0/api_home.html); он скрыт от участников, так же как и набор классов в нем. 
 
 **Private.** Приватный тестовый датасет скрыт от участников, так же как и набор классов в нем.
 
@@ -216,6 +216,8 @@ IoU для каждой пары (prediction/true) принимает значе
 
 Особенность задачи заключается в том, что вопросы не гомогенны: подходящий ответ может как состоять из нескольких слов, так и быть односложным (ответ типа "да/нет") или представлять собой число. Подразумевается, что на один вопрос необходимо дать только один ответ. 
 
+Вопросы могут быть как на английском языке, так и на русском. Предполагается, что язык ответа соответствует языку вопроса, кроме тех случаев, когда вопрос касается текста на изображении (например, "Что написано на футболке?") – в этом случае ответ должен быть на том же языке, на котором написан текст. 
+
 ## Данные
 
 **Train.** В качестве обучающей выборки предлагается использовать часть train датасета [VQA v2](https://visualqa.org/download.html): в состав входят вопросы на английском языке (файл *Training questions 2017 v2.0*), изображения из датасета COCO, по которым эти вопросы заданы (файл *Training images*), а также аннотации - ответы на вопросы (файл *Training annotations 2017 v2.0*).
@@ -245,9 +247,9 @@ IoU для каждой пары (prediction/true) принимает значе
 
 Итоговая оценка складывается из оценок по подзадачам:
 
-![image](https://latex.codecogs.com/svg.image?\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4})
+![image](https://latex.codecogs.com/svg.image?\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
 
-, где S – итоговая оценка участника, S<sub>1</sub> – оценка по подзадаче Code2code translation, S<sub>2</sub> – оценка по подзадаче Zero-shot object detection, S<sub>3</sub> – оценка по подзадаче Handwritten Text Recognition, S<sub>4</sub> – оценка по подзадаче Visual Question Answering. 
+где S – итоговая оценка участника, S<sub>1</sub> – оценка по подзадаче Code2code translation, S<sub>2</sub> – оценка по подзадаче Zero-shot object detection, S<sub>3</sub> – оценка по подзадаче Handwritten Text Recognition, S<sub>4</sub> – оценка по подзадаче Visual Question Answering. 
 
 Оценка по каждой из подзадач принимает значения от 0 до 1 (исключение составляет метрика CodeBLEU, которая используется для оценки Code2code translation и может принимать значения в диапазоне от 0 до 100 – с целью нормализации метрика умножается на коэффициент 0.01) – таким образом, минимальное значение итоговой оценки составляет 0, максимальное – 4. Расчет оценки по каждой подзадаче округляется до третьего знака после запятой. По значениям итоговой оценки формируется лидерборд по задаче Fusion Brain Challenge. 
 
@@ -257,7 +259,7 @@ IoU для каждой пары (prediction/true) принимает значе
 
 Формула расчета денежного приза имеет следующий вид:
 
-![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize.png)
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize.png),
 
 , где S – итоговая оценка участника, S<sub>baseline</sub> – итоговая оценка бейзлайна, δ = 0.15 – минимальное значение, на которое должна быть превышена итоговая оценка бейзлайна, коэффициент α зависит от места в лидерборде (топ-3 решения) и вычисляется следующим образом:
 
