@@ -141,7 +141,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 [Аннотации](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
 
-**Public.**  Публичный тестовый датасет сформирован из части датасета [VisualGenome](https://visualgenome.org/api/v0/api_home.html); он скрыт от участников, так же как и набор классов в нем. 
+**Public.**  Публичный тестовый датасет сформирован из части датасета [VisualGenome](https://visualgenome.org/api/v0/api_home.html); набор классов в нем скрыт от участников. 
 
 **Private.** Приватный тестовый датасет скрыт от участников, так же как и набор классов в нем.
 
