@@ -91,7 +91,7 @@ where C(i, i+n) is an n-gram starting in the i place and ending in the i+n place
 
 where Count(T<sub>ref</sub>) is a total number of subtrees in the reference code, Count<sub>clip</sub>(T<sub>cand</sub>) is a number of subtrees in the translated code that have matched the subtrees of reference functions. This metric allows assessing the quality of a code translated in terms of its syntax.
 
-* The translated code and reference code are also compared by their semantics, using data flows (```Guo et al., 2020```) when the source code is represented as a graph with its points being variables and its sides, the ‘genetic’ relations between the points (denoting the origin of each variable value). The Match<sub>df</sub> metric shall be calculated according to the following formula:
+* The translated code and reference code are also compared by their semantics, using data flows (```Guo et al., 2020```) when the source code is represented as a graph with its nodes being variables and its edges, the ‘genetic’ relations between the nodes (denoting the origin of each variable value). The Match<sub>df</sub> metric shall be calculated according to the following formula:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
 
@@ -101,9 +101,9 @@ where Count(DF<sub>ref</sub>) is a total number of data flows in the reference c
 
 Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
 
-* The ```requests.json``` file. It is a dictionary in the following format: ```{ "0": "import java . util . Scanner ; ..." , ... }```. Keys shall be represented by example indices, while values shall be represented by lines of functions/programs in Java that should be translated into Python.
+* The ```requests.json``` file. It is a dictionary in the following format: ```{ "0": "import java . util . Scanner ; ..." , ... }```. Keys shall be represented by sample indices, while values shall be represented by lines of functions/programs in Java that should be translated into Python.
 
-The participant’s model should translate all examples from the requests.json file and generate the ```prediction_С2С.json``` file. It is a dictionary in the following format: ```{ "0": "def find ( x , par ) : NEW_LINE INDENT if par [ x ] == x : ..." , ... }```. Keys shall be represented by example indices, while values shall be represented by translations of functions/programs into Python. Please, pay attention to the fact that since Python uses indentations to identify logic blocks in codes, the line of translation into Python includes such special tokens as ```INDENT```, ```DEDENT```. 
+The participant’s model should translate all examples from the requests.json file and generate the ```prediction_С2С.json``` file. It is a dictionary in the following format: ```{ "0": "def find ( x , par ) : NEW_LINE INDENT if par [ x ] == x : ..." , ... }```. Keys shall be represented by sample indices, while values shall be represented by translations of functions/programs into Python. Please, pay attention to the fact that since Python uses indentations to identify logic blocks in codes, the line of translation into Python includes such special tokens as ```INDENT```, ```DEDENT```. 
 
 After inference, the metric calculation script shall compare the ```prediction_С2С.json``` and ```true_С2С.json``` files, and then display the final value of the CodeBLEU metric.
 
@@ -114,6 +114,7 @@ After inference, the metric calculation script shall compare the ```prediction_
 * It is necessary to determine the class of an object shown in a photo (or classes, if there are several objects). For example, “human,“ “car,“ “apple“.
 
 * At the same time, it is necessary to determine the location and scale of each object shown in a photo. The object location shall be described with the so-called bounding box (bbox). This is a rectangle to be drawn most accurately around the object. The rectangle position shall be set with four numbers – X, Y, W, H, where:
+
     * X is a horizontal coordinate of the top left corner
     * Y is a vertical coordinate of the top left corner
     * W is the rectangle width
@@ -123,7 +124,7 @@ For each object in a photo, the model predictions should be represented by bbox 
 
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/od.png)
 
-Within the framework of our competition, the task is defines as  zero-shot object detection. Zero-shot in the task description means that the model predictions should be based on a dataset completely differing from the training one. A standard object detection model is expected to predict one class out of a limited set of classes determined during the model training. A zero-shot model is expected to detect classes not found in the training set.
+Within the framework of our competition, the task is defines as zero-shot object detection. Zero-shot in the task description means that the model should be able to succesfully make predictions on a dataset completely differing from the training one. A standard object detection model is expected to predict one class out of a limited set of classes determined during the model training. A zero-shot model is expected to detect classes not found in the training set.
 
 Besides, the model should transfer the set of classes to be used for each image as a query. A query may contain classes in both Russian and English.
 
@@ -143,13 +144,13 @@ At the prediction stage, the model input shall contain two entities: an image an
 
 ## Quality metric
 
-The quality will be evaluated using the **average precision**(AP) metric. To calculate AP, you should choose IoU (intersection over union) first. This metric evaluates the quality of the prediction based on the bbox against the reference. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
+The quality will be evaluated using the **mean average precision**(mAP) metric. To calculate mAP, you should choose IoU (intersection over union) first. This metric evaluates the match quality of the predicted bbox and the reference one. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
 
 For each pair (prediction/true), IoU ranges from 0 to 1. The cutting threshold for IoU is 0.5, meaning that all bboxes with their IoU below 0.5 are deemed false predictions.
 
-For each class with a certain IoU value, the Precision-Recall curve shall be drawn and the area below the curve shall be calculated. The calculations shall be averaged by class to arrive at the final AP metric.
+For each class with a certain IoU value, the Precision-Recall curve shall be drawn and the area below the curve shall be calculated. The calculations shall be averaged by class to arrive at the final mAP metric.
 
 ## Solution format
 
