@@ -201,12 +201,68 @@ The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "co
 
 ## Description
 
+It is necessary to use a text to answer a question about the image. The model input shall be the image and a text question related to it, while the output should be the answer to the question in the text format. For example, in this case, an answer to the question “What are the moustache made of?” may be represented by the word “bananas”:
+
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/bananas.png)
+
+The special feature of this task is that questions are not homogenous: a suitable answer may consist of several words or be one-syllable (yes/no answer) or represent a number. It is understood that it is necessary to give only one answer for one question.
+
+Questions may be in English or in Russian. It is supposed that the answer language corresponds to the question language, unless the question refers to the text in the picture (for example, “What is written on a t-shirt?”) – it this case, the answer should be in the same language as the text.
+
 ## Data
 
-**Train.**
-**Test public.**
-**Test private.**
+**Train.** It is suggested that a training set should be represented by a part of the train dataset [VQA v2](https://visualqa.org/download.html): it shall include questions in English (*Training questions 2017 v2.0* file), images from the COCO dataset, for which these questions are asked (*Training images* file), as well as annotations - answers to questions (*Training annotations 2017 v2.0* file).
+
+**Test public.** The public test dataset consists of questions in both Russian and English: the Russian part represents translated 10,000 first samples from the validation part of the VQA v2 dataset, while the English one represents other 10,000 examples from the same dataset taken in the original form.
+
+**Test private.** The private test dataset is hidden from participants. Its format is similar to the public test set and contains questions in Russian and English.
 
 ## Quality metric
 
+The quality will be evaluated using the **accuracy** metric. It reflects the percentage of correct matches for the pairs of predicted and correct answers, i.e. the percentage of matching answers (the model predicts an answer matching the true one) to the total number of answers. This metric varies from 0 to 1, where 0 is the worst value and 1, the best one:
+
+![image](https://latex.codecogs.com/svg.image?\textrm{accuracy}&space;=\frac{&space;\textrm{True&space;answers}}{&space;\textrm{All&space;answers}})
+
 ## Solution format
+
+Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+
+* The ```images``` folder.  It is a set of images, to which the answers refer. It contains files in the following format: ```0.jpg, 1.jpg ...```.
+* The ```questions.json``` file. It is a dictionary in the following format: ```{ "0": {"image_id": "1.jpg", "question": "Where is he looking?"} , ... }```. Keys shall be represented by example indices, while values shall be represented by a dictionary with "image_id" (value: name of a file from the images folder) and "question" (value: text of a question for the respective image) fields. Questions may be asked in English or in Russian.
+
+
+The participant’s model should make predictions for all questions and generate the ```prediction_VQA.json``` file. It is a dictionary in the following format: ```{ "0": "down" , ... }```. Keys shall be represented by example indices, while values shall be represented by answers to the respective questions predicted by the model.
+
+After inference, the metric calculation script shall compare the ```prediction_VQA.json``` and ```true_VQA.json``` files, and then display the final value of the accuracy metric.
+
+# Integral metric
+
+The final score shall be composed of scores for subtasks:
+
+![image](https://latex.codecogs.com/svg.image?\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
+
+where S is a final score of the participant,  S<sub>1</sub> is a score for the Code2code translation subtask, S<sub>2</sub> is a score for the Zero-shot object detection subtask, S<sub>3</sub> is a score for the Handwritten Text Recognition subtask, S<sub>4</sub> is a score for the Visual Question Answering subtask.
+
+Scores for each subtask will take values from 0 to 1 (the only exception is the CodeBLEU metric used to evaluate Code2code translation and may take values within the range from 0 to 100 – with a view to normalize it, the metric will be multiplied by 0.01) – therefore, the lowest value of final score will be 0, while the highest one will be 4. Calculation of scores for each subtask shall be rounded to the third decimal place. The final score value shall serve as the basis for generating a leaderboard for the Fusion Brain Challenge task.
+
+# Prize pool
+
+Prizes for each winning place are fixed (FIX). The bonus shall depend on the winners’ final scores, but not exceeding the difference between the maximum (MAX) and fixed value. In each task, it is necessary to break the baseline. In each task, it is necessary to surpass baseline metrics for each subtask, while the integral metric should surpass the integral baseline metric at least by 0.15 (δ).
+
+The prize amount shall be calculated according to the following formula:
+
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize.png)
+
+, where S is the participant’s final score, S<sub>baseline</sub> is the baseline final score, δ = 0.15 is the lowest value for surpassing the baseline final score, while the α coefficient shall depend on the place in leaderboard (Top-3 solutions) and be calculated as follows:
+
+![image](https://latex.codecogs.com/svg.image?\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
+
+where α<sub>place</sub> is a coefficient for the first, second and third places in the leaderboard (the place index means a place in the final leaderboard).  MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIXplace is a fixed prize for top solutions in the leaderboard with (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). The α<sub>place</sub> coefficient shall be calculated only for cases, where S<sub>baseline</sub + δ ≤ S < 2.3 (see the table above).
+    
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot.png)
+    
+**First place**: from RUB 1,000,000 to RUB 3,000,000 (depending on the quality of participant’s solution)
+    
+**Second place**: from RUB 500,000 to RUB 1,500,000 (depending on the quality of participant’s solution)
+    
+**Third place**: from RUB 200 000 to RUB 800,000 (depending on the quality of participant’s solution)
