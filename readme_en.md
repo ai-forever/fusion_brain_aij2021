@@ -43,7 +43,7 @@ After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be 
 
 A task of translation from one programming language into another is a standard part of the wide-ranging repertoire of ML4Code. As of today, there are several alternate solutions – in line with both supervised learning, where a training dataset is represented by a parallel corpus (baseline model of the CodeXGLUE benchmark with CodeBERT as a coder in the coder-decoder-type architecture, ```Lu et al., 2021```), and unsupervised one, including pretraining of cross-lingual language model on monolingual corpora (TransCoder, ```Lachaux et al., 2020```). 
 
-Cases where a source language and a target language have different type systems are particularly problematic. It is that very class that our solution belongs to: we should translate from a statically-typed language (Java) to a dynamically-typed one (Python). The input is a Java function and the output should be the similar function in Python.
+Cases where a source language and a target language have different type systems are particularly problematic. It is that very class that our subtask belongs to: we should translate from a statically-typed language (Java) to a dynamically-typed one (Python). The input is a Java function and the output should be the similar function in Python.
 
 ## Data
 
