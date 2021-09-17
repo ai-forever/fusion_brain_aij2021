@@ -111,7 +111,7 @@ After inference, the metric calculation script shall compare the ```prediction_
 
 ## Description
 
-* It is necessary to determine the class of an object shown in a photo (or classes, if there are several objects). For example, “human,“ “car,“ “apple“.
+* It is necessary to determine the class of an object shown in a photo (or classes, if there are several objects). For example, “human“, “car“, “apple“.
 
 * At the same time, it is necessary to determine the location and scale of each object shown in a photo. The object location shall be described with the so-called bounding box (bbox). This is a rectangle to be drawn most accurately around the object. The rectangle position shall be set with four numbers – X, Y, W, H, where:
 
