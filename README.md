@@ -98,7 +98,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
 
-гдe Count(DF<sub>ref</sub>) - общее количество "потоков данных" референсного кода,Count<sub>clip</sub>(DF<sub>cand</sub>) - количество "потоков данных" переведенного кода, совпавших с эталонными.
+гдe Count(DF<sub>ref</sub>) - общее количество "потоков данных" референсного кода, Count<sub>clip</sub>(DF<sub>cand</sub>) - количество "потоков данных" переведенного кода, совпавших с эталонными.
 
 ## Формат решения
 
