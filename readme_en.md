@@ -53,8 +53,7 @@ The file have the jsonl format with java and python fields:
 ```
 {"java":"import java . util . Scanner ; \u00a0 public class A1437 { \u00a0 public static void main ( String [ ] args ) { Scanner in = new Scanner ( System . in ) ; int T = in . nextInt ( ) ; for ( int t = 0 ; t < T ; t ++ ) { int L = in . nextInt ( ) ; int R = in . nextInt ( ) ; boolean possible = R < 2 * L ; System . out . println ( possible ? \" YES \" : \" NO \" ) ; } } \u00a0 }\n","python":"t = int ( input ( ) ) NEW_LINE ans = [ ] NEW_LINE for i in range ( t ) : l , r = [ int ( x ) for x in input ( ) . split ( ) ] NEW_LINE if ( 2 * l ) > r : NEW_LINE INDENT ans . append ( \" YES \" ) else : NEW_LINE ans . append ( \" NO \" ) NEW_LINE DEDENT for j in ans : print ( j ) NEW_LINE\n"}
 ```
-**Test public.** The public leaderboard shall be generated according to the results of model prediction check based on a test set (1,693) from the AVATAR dataset. 
-**Test private.** The private test dataset is hidden from participants. Its format is similar to the public test set.
+**Test public.** The public leaderboard shall be generated according to the results of model prediction check based on a test set (1,693) from the AVATAR dataset. **Test private.** The private test dataset is hidden from participants. Its format is similar to the public test set.
 
 ## Quality metric
 
