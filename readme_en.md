@@ -257,7 +257,7 @@ The prize amount shall be calculated according to the following formula:
 
 ![image](https://latex.codecogs.com/svg.image?\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
 
-where α<sub>place</sub> is a coefficient for the first, second and third places in the leaderboard (the place index means a place in the final leaderboard).  MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIXplace is a fixed prize for top solutions in the leaderboard with (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). The α<sub>place</sub> coefficient shall be calculated only for cases, where S<sub>baseline</sub + δ ≤ S < 2.3 (see the table above).
+where α<sub>place</sub> is a coefficient for the first, second and third places in the leaderboard (the place index means a place in the final leaderboard).  MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIXplace is a fixed prize for top solutions in the leaderboard with (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). The α<sub>place</sub> coefficient shall be calculated only for cases, where S<sub>baseline</sub> + δ ≤ S < 2.3 (see the table above).
     
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot.png)
     
