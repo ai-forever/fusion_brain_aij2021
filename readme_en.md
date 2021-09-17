@@ -255,7 +255,7 @@ For each winning place there is a fixed prize (FIX). The bonus shall depend on t
 
 The prize amount shall be calculated according to the following formula:
 
-![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize.png)
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot_en.png)
 
 , where S is the participant’s final score, S<sub>baseline</sub> is the baseline final score, δ = 0.15 is the lowest value for surpassing the baseline final score, while the α coefficient shall depend on the place in leaderboard (Top-3 solutions) and be calculated as follows:
 
