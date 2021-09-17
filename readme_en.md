@@ -262,7 +262,14 @@ where α<sub>place</sub> is a coefficient for the first, second and third place
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot.png)
     
 **First place**: from RUB 1,000,000 to RUB 3,000,000 (depending on the quality of participant’s solution)
-    
 **Second place**: from RUB 500,000 to RUB 1,500,000 (depending on the quality of participant’s solution)
-    
 **Third place**: from RUB 200 000 to RUB 800,000 (depending on the quality of participant’s solution)
+    
+**Additional categories**:
+    
+RUB 300,000 for the first place in the Code2code translation subtask
+RUB 300,000 for the first place in the Zero-shot object detection subtask
+RUB 300,000 for the first place in the Handwritten Text Recognition subtask
+RUB 300,000 for the first place in the Visual Question Answering subtask
+    
+Link to the Rules of the AIJ Contest
