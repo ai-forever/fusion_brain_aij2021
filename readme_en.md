@@ -2,6 +2,8 @@
 
 The current task suggests developing a single multitask model, which would successfully complete such multimodality subtasks as **Code2code translation (С2С), Zero-shot object detection (OD), Handwritten Text Recognition (HTR), Visual Question Answering (VQA)** and be able to break an integral metric of baseline proposed by the Arranger, as well as metrics for each subtask.
 
+Uploading solutions to the Competition platform will become available from **04/10/2021**.
+
 ## General solution format
 
 Participants should create a zip archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container. Solutions may be run with the use of any image available for downloading from DockerHub. If necessary, you can prepare your own image, add necessary software and libraries to it (see the manual on creating Docker images); to use it, you will need to publish it on DockerHub.
