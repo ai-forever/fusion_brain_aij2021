@@ -91,7 +91,7 @@ where C(i, i+n) is an n-gram starting in the i place and ending in the i+n place
 
 where Count(T<sub>ref</sub>) is a total number of subtrees in the reference code, Count<sub>clip</sub>(T<sub>cand</sub>) is a number of subtrees in the translated code that have matched the subtrees of reference functions. This metric allows assessing the quality of a code translated in terms of its syntax.
 
-* The translated code and reference code are also compared by their semantics, using data flows (```Guo et al., 2020```) when the source code is represented as a graph with its nodes being variables and its edges, the ‘genetic’ relations between the nodes (denoting the origin of each variable value). The Match<sub>df</sub> metric shall be calculated according to the following formula:
+* The translated code and reference code are also compared by their semantics, using data flows (```Guo et al., 2020```) when the source code is represented as a graph with its nodes being variables and its edges representing the ‘genetic’ relations between the nodes (denoting the origin of each variable value). The Match<sub>df</sub> metric shall be calculated according to the following formula:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
 
