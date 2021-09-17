@@ -255,7 +255,7 @@ For each winning place there is a fixed prize (FIX). The bonus shall depend on t
 
 The prize amount shall be calculated according to the following formula:
 
-![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot_en.png)
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize.png)
 
 , where S is the participant’s final score, S<sub>baseline</sub> is the baseline final score, δ = 0.15 is the lowest value for surpassing the baseline final score, while the α coefficient shall depend on the place in leaderboard (Top-3 solutions) and be calculated as follows:
 
@@ -263,7 +263,7 @@ The prize amount shall be calculated according to the following formula:
 
 where α<sub>place</sub> is a coefficient for the first, second and third places in the leaderboard (the place index means a place in the final leaderboard).  MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIXplace is a fixed prize for top solutions in the leaderboard with (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). The α<sub>place</sub> coefficient shall be calculated only for cases, where S<sub>baseline</sub> + δ ≤ S < 2.3 (see the table above).
     
-![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot.png)
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot_en.png)
     
 **First place**: from RUB 1,000,000 to RUB 3,000,000 (depending on the quality of participant’s solution)  
 **Second place**: from RUB 500,000 to RUB 1,500,000 (depending on the quality of participant’s solution)  
