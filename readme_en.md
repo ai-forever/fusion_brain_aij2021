@@ -144,7 +144,7 @@ At the prediction stage, the model input shall contain two entities: an image an
 
 ## Quality metric
 
-The quality will be evaluated using the **mean average precision**(mAP) metric. To calculate mAP, you should choose IoU (intersection over union) first. This metric evaluates the match quality of the predicted bbox and the reference one. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
+The quality will be evaluated using the **mean average precision** (mAP) metric. To calculate mAP, you should choose IoU (intersection over union) first. This metric evaluates the match quality of the predicted bbox and the reference one. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
 
@@ -157,9 +157,9 @@ For each class with a certain IoU value, the Precision-Recall curve shall be dra
 Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
 
 * The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```.
-* The ```requests.json``` file. It is a dictionary in the following format: ```{ "0.jpg": ["tree", "clock", "book"] , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by a list of classes to be detected in the respective image (query). As we said before, the list of classes may be in Russian or in English. Therefore, the query contains the list of labels to search from (for example, “dog, bicycle, car, cake, airplane”). **The query contains both correct tags belonging to objects actually present in the image and some incorrect labels (there no respective objects in the picture)**.
+* The ```requests.json``` file. It is a dictionary in the following format: ```{ "0.jpg": ["tree", "clock", "book"] , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by a list of classes to be detected in the respective image (query). As we said before, the list of classes may be whether in Russian or in English. Therefore, the query contains the list of labels to search from (for example, “dog, bicycle, car, cake, airplane”). **The query contains both correct tags belonging to objects actually present in the image and some incorrect labels (there no respective objects in the picture)**.
 
-The participant’s model should make predictions for all images from the images folder and generate a ```prediction_OD.json``` file. It is a dictionary in the following format: ```{"0.jpg": [["dog", 0.5, 473.07, 395.93, 38.65, 28.67], ["cat", 0.6, 0.0, 101.15, 452.3, 319.43]], ...```. Keys shall be represented by names of files from the images folder, while values shall be represented by model predictions for the respective images. These predictions should contain detected classes, together with coordinates of bounding boxes for the respective image: the key “name of file with the image” shall be used for showing a list of objects predicted on it. Format of one element in the list: ```["dog", 0.5, 473.07, 395.93, 38.65, 28.67]``` (six elements divided by commas). The first element is the class name, the second is the model score, and then we have four bbox coordinates in the xywh format. The nested list may contain the unlimited number of elements – these are all objects predicted by the model for the respective image.
+The participant’s model should make predictions for all images from the images folder and generate a ```prediction_OD.json``` file. It is a dictionary in the following format: ```{"0.jpg": [["dog", 0.5, 473.07, 395.93, 38.65, 28.67], ["cat", 0.6, 0.0, 101.15, 452.3, 319.43]], ...```. Keys shall be represented by names of files from the images folder, while values shall be represented by model predictions for the respective images. These predictions should contain detected classes, together with coordinates of bounding boxes for the respective image: the key “name of file with the image” shall be used for showing a list of objects predicted on it. Format of one element in the list: ```["dog", 0.5, 473.07, 395.93, 38.65, 28.67]``` (six elements divided by commas). The first element is the class name, the second is the model score, and then we have four bbox coordinates in the ```xywh``` format. The nested list may contain the unlimited number of elements – these are all objects predicted by the model for the respective image.
 
 Then, the system shall compare the file with predictions with the ```true_OD.json``` file containing correct answers, and display the final mAP metric.
 
@@ -173,11 +173,11 @@ Participants are given the task to recognize a handwritten text in the picture. 
 
 ## Data
 
-**Train.** Training shall be based on a [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of two different datasets. The first one is a manually collected dataset of school copybooks. Images in this dataset are represented by individual words in a text written on a copybook page. The second part consists of a popular dataset called IAM.  It is a set of handwritten words in English.
+**Train.** We provide a training [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of two different datasets. The first one is a manually collected dataset of school copybooks. Images in this dataset are represented by individual words in a text written on a copybook page. The second part consists of a popular dataset called IAM. It is a set of handwritten words in English.
 
 **Test public.** The public leaderboard shall also be calculated with regard to copybook datasets and IAM.
 
-**Test private.** The private test dataset is hidden from participants. It is also a dataset for text recognition in a format similar to training dataset. However, we do not provide any information on dataset details and a language used in it.
+**Test private.** The private test dataset is hidden from participants. It is also a dataset for text recognition in a format similar to training dataset. However, we do not provide any information on dataset details.
 
 ## Quality metric
 
@@ -195,23 +195,23 @@ Participants should create an archive with a trained model and a set of scripts 
 
 * The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```. Each file contains graphic images of characters to be translated into text characters (text lines).
 
-The participant’s model should make predictions for all images from the images folder and generate a ```prediction_HTR.json``` file. It is a dictionary in the following format:  ```{"0.txt": "correct text in the picture" , "1.txt": "predicted text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by predicted lines in the respective images. If there is no prediction for a name.png file with the image, i.e. keys of the ```prediction_HTR.json``` dictionary do not include the ```"name.png"``` key, the translation will be filled with the empty line ```""```.
+The participant’s model should make predictions for all images from the images folder and generate a ```prediction_HTR.json``` file. It is a dictionary in the following format:  ```{"0.txt": "predicted text in the picture" , "1.txt": "predicted text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by predicted lines in the respective images. If there is no prediction for a name.png file with the image, i.e. keys of the ```prediction_HTR.json``` dictionary do not include the ```"name.png"``` key, the translation will be filled with the empty line ```""```.
 
 After inference, the metric calculation script shall compare the ```prediction_HTR.json``` and ```true_HTR.json``` files, and then display the final value of the metric for this task.
 
-The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "correct text in the picture" , "1.txt": "predicted text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
+The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "correct text in the picture" , "1.txt": "correct text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
 
 # Subtask 4 - Visual Question Answering
 
 ## Description
 
-It is necessary to use a text to answer a question about the image. The model input shall be the image and a text question related to it, while the output should be the answer to the question in the text format. For example, in this case, an answer to the question “What are the moustache made of?” may be represented by the word “bananas”:
+The objective is to give a text answer to a question about the image. The model input shall be the image and a text question related to it, while the output should be the answer to the question in the text format. For example, in this case, an answer to the question “What are the moustache made of?” may be represented by the word “bananas”:
 
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/bananas.png)
 
 The special feature of this task is that questions are not homogenous: a suitable answer may consist of several words or be one-syllable (yes/no answer) or represent a number. It is understood that it is necessary to give only one answer for one question.
 
-Questions may be in English or in Russian. It is supposed that the answer language corresponds to the question language, unless the question refers to the text in the picture (for example, “What is written on a t-shirt?”) – it this case, the answer should be in the same language as the text.
+Questions may be whether in English or in Russian. It is supposed that the answer language corresponds to the question language, unless the question refers to the text in the picture (for example, “What is written on a t-shirt?”) – it this case, the answer should be in the same language as the text on the image.
 
 ## Data
 
@@ -232,10 +232,10 @@ The quality will be evaluated using the **accuracy** metric. It reflects the per
 Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
 
 * The ```images``` folder.  It is a set of images, to which the answers refer. It contains files in the following format: ```0.jpg, 1.jpg ...```.
-* The ```questions.json``` file. It is a dictionary in the following format: ```{ "0": {"image_id": "1.jpg", "question": "Where is he looking?"} , ... }```. Keys shall be represented by example indices, while values shall be represented by a dictionary with "image_id" (value: name of a file from the images folder) and "question" (value: text of a question for the respective image) fields. Questions may be asked in English or in Russian.
+* The ```questions.json``` file. It is a dictionary in the following format: ```{ "0": {"image_id": "1.jpg", "question": "Where is he looking?"} , ... }```. Keys shall be represented by sample indices, while values shall be represented by a dictionary with "image_id" (value: name of a file from the images folder) and "question" (value: text of a question for the respective image) fields. Questions may be asked in English or in Russian.
 
 
-The participant’s model should make predictions for all questions and generate the ```prediction_VQA.json``` file. It is a dictionary in the following format: ```{ "0": "down" , ... }```. Keys shall be represented by example indices, while values shall be represented by answers to the respective questions predicted by the model.
+The participant’s model should make predictions for all questions and generate the ```prediction_VQA.json``` file. It is a dictionary in the following format: ```{ "0": "down" , ... }```. Keys shall be represented by sample indices, while values shall be represented by answers to the respective questions predicted by the model.
 
 After inference, the metric calculation script shall compare the ```prediction_VQA.json``` and ```true_VQA.json``` files, and then display the final value of the accuracy metric.
 
@@ -245,13 +245,13 @@ The final score shall be composed of scores for subtasks:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
 
-where S is a final score of the participant,  S<sub>1</sub> is a score for the Code2code translation subtask, S<sub>2</sub> is a score for the Zero-shot object detection subtask, S<sub>3</sub> is a score for the Handwritten Text Recognition subtask, S<sub>4</sub> is a score for the Visual Question Answering subtask.
+where S is a final score of the participant, S<sub>1</sub> is a score for the Code2code translation subtask, S<sub>2</sub> is a score for the Zero-shot object detection subtask, S<sub>3</sub> is a score for the Handwritten Text Recognition subtask, S<sub>4</sub> is a score for the Visual Question Answering subtask.
 
-Scores for each subtask will take values from 0 to 1 (the only exception is the CodeBLEU metric used to evaluate Code2code translation and may take values within the range from 0 to 100 – with a view to normalize it, the metric will be multiplied by 0.01) – therefore, the lowest value of final score will be 0, while the highest one will be 4. Calculation of scores for each subtask shall be rounded to the third decimal place. The final score value shall serve as the basis for generating a leaderboard for the Fusion Brain Challenge task.
+Scores for each subtask will take values from 0 to 1 (the only exception is the CodeBLEU metric used to evaluate Code2code translation: it may take values within the range from 0 to 100 – with a view to normalize it, the metric will be multiplied by 0.01) – therefore, the lowest value of the final score will be 0, while the highest one will be 4. Calculation of scores for each subtask shall be rounded to the third decimal place. The final score value shall serve as the basis for generating a leaderboard for the Fusion Brain Challenge task.
 
 # Prize pool
 
-Prizes for each winning place are fixed (FIX). The bonus shall depend on the winners’ final scores, but not exceeding the difference between the maximum (MAX) and fixed value. In each task, it is necessary to break the baseline. In each task, it is necessary to surpass baseline metrics for each subtask, while the integral metric should surpass the integral baseline metric at least by 0.15 (δ).
+For each winning place there is a fixed prize (FIX). The bonus shall depend on the winners’ final scores, but not exceeding the difference between the maximum (MAX) and fixed value. In each task, it is necessary to outperform the baseline. In each task, it is necessary to surpass baseline metrics for each subtask, while the integral metric should surpass the integral baseline metric at least by 0.15 (δ).
 
 The prize amount shall be calculated according to the following formula:
 
