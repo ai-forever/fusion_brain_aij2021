@@ -67,7 +67,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{CodeBLEU}&space;=&space;\alpha&space;\cdot&space;\textrm{BLEU}&space;&plus;&space;\beta&space;\cdot&space;\textrm{BLEU}_{weight}&space;&plus;&space;\gamma&space;\cdot&space;\textrm{Match}_{ast}&space;&plus;&space;\delta&space;\cdot&space;\textrm{Match}_{df},)
 
-где BLEU - стандартная метрика BLEU ```Papineni et al., 2002``` , BLEU<sub>weight</sub> - взвешенное сопоставление n-грамм (токены различаются по важности -- и совпадение определённых токенов переведенных и "золотых" функций имеет больший вес), Match<sub>ast</sub> - метрика соответствия деревьев абстрактного синтаксиса переведенного кода и эталонного, Match<sub>df</sub> отражает сходство "потоков данных" функций-гипотез и верных функций.
+где BLEU - стандартная метрика BLEU ```Papineni et al., 2002``` , BLEU<sub>weight</sub> - взвешенное сопоставление n-грамм (токены различаются по важности - и совпадение определённых токенов переведенных и "золотых" функций имеет больший вес), Match<sub>ast</sub> - метрика соответствия деревьев абстрактного синтаксиса переведенного кода и эталонного, Match<sub>df</sub> отражает сходство "потоков данных" функций-гипотез и верных функций.
 
 Остановимся подробнее на каждой из компонент метрики:
 
@@ -282,3 +282,4 @@ IoU для каждой пары (prediction/true) принимает значе
 * 300 000 рублей за первое место в подзадаче Handwritten Text Recognition
 * 300 000 рублей за первое место в подзадаче Visual Question Answering
 
+Правила соревнования AIJ 2021
