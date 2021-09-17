@@ -94,7 +94,7 @@ where Count(T<sub>ref</sub>) is a total number of subtrees in the reference code
 
 where Count(DF<sub>ref</sub>) is a total number of data flows in the reference code; Count<sub>clip</sub>(DF<sub>cand</sub>) is a number of data flows in the translated code that have matched the reference code.
 
-# Solution format
+## Solution format
 
 Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
 
@@ -103,3 +103,110 @@ Participants should create an archive with a trained model and a set of scripts 
 The participant’s model should translate all examples from the requests.json file and generate the ```prediction_С2С.json``` file. It is a dictionary in the following format: ```{ "0": "def find ( x , par ) : NEW_LINE INDENT if par [ x ] == x : ..." , ... }```. Keys shall be represented by example indices, while values shall be represented by translations of functions/programs into Python. Please, pay attention to the fact that since Python uses indentations to identify logic blocks in codes, the line of translation into Python includes such special tokens as ```INDENT```, ```DEDENT```. 
 
 After inference, the metric calculation script shall compare the ```prediction_С2С.json``` and ```true_С2С.json``` files, and then display the final value of the CodeBLEU metric.
+
+# Subtask 2 - Zero-shot object detection
+
+## Description
+
+* It is necessary to determine the class of an object shown in a photo (or classes, if there are several objects). For example, “human,“ “car,“ “apple“.
+
+* At the same time, it is necessary to determine the location and scale of each object shown in a photo. The object location shall be described with the so-called bounding box (bbox). This is a rectangle to be drawn most accurately around the object. The rectangle position shall be set with four numbers – X, Y, W, H, where:
+    * X is a horizontal coordinate of the top left corner
+    * Y is a vertical coordinate of the top left corner
+    * W is the rectangle width
+    * H is the rectangle height
+
+For each object in a photo, the model predictions should be represented by bbox coordinates and a class tag. An example of the result of object detection model work is shown in the next picture:
+
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/od.png)
+
+Within the framework of our competition, the task is defines as  zero-shot object detection. Zero-shot in the task description means that the model predictions should be based on a dataset completely differing from the training one. A standard object detection model is expected to predict one class out of a limited set of classes determined during the model training. A zero-shot model is expected to detect classes not found in the training set.
+
+Besides, the model should transfer the set of classes to be used for each image as a query. A query may contain classes in both Russian and English.
+
+At the prediction stage, the model input shall contain two entities: an image and a natural-language query. The query is formatted as a text line containing a list of labels to search from. Example: “dog, bicycle, car, cake, airplane”. The query contains both correct tags (objects actually present in the picture) and some incorrect ones. Their combination makes a single search space for the model. The model should output a list of predicted tags with the corresponding bounding box coordinates.
+
+## Data
+
+**Train.** It is suggested that training should be based on a popular dataset called MS-COCO.
+
+[Images](http://images.cocodataset.org/zips/train2017.zip)
+
+[Annotations](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
+
+**Test public.** The public test dataset is generated from a part of the VisualGenome dataset; a set of classes in it is hidden from participants.
+
+**Test private.** The private test dataset is hidden from participants, just as a set of classes in it.
+
+## Quality metric
+
+The quality will be evaluated using the **average precision**(AP) metric. To calculate AP, you should choose IoU (intersection over union) first. This metric evaluates the quality of the prediction based on the bbox against the reference. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
+
+![image](https://latex.codecogs.com/svg.image?\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
+
+For each pair (prediction/true), IoU ranges from 0 to 1. The cutting threshold for IoU is 0.5, meaning that all bboxes with their IoU below 0.5 are deemed false predictions.
+
+For each class with a certain IoU value, the Precision-Recall curve shall be drawn and the area below the curve shall be calculated. The calculations shall be averaged by class to arrive at the final AP metric.
+
+## Solution format
+
+Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+
+* The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```.
+* The ```requests.json``` file. It is a dictionary in the following format: ```{ "0.jpg": ["tree", "clock", "book"] , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by a list of classes to be detected in the respective image (query). As we said before, the list of classes may be in Russian or in English. Therefore, the query contains the list of labels to search from (for example, “dog, bicycle, car, cake, airplane”). **The query contains both correct tags belonging to objects actually present in the image and some incorrect labels (there no respective objects in the picture)**.
+
+The participant’s model should make predictions for all images from the images folder and generate a ```prediction_OD.json``` file. It is a dictionary in the following format: ```{"0.jpg": [["dog", 0.5, 473.07, 395.93, 38.65, 28.67], ["cat", 0.6, 0.0, 101.15, 452.3, 319.43]], ...```. Keys shall be represented by names of files from the images folder, while values shall be represented by model predictions for the respective images. These predictions should contain detected classes, together with coordinates of bounding boxes for the respective image: the key “name of file with the image” shall be used for showing a list of objects predicted on it. Format of one element in the list: ```["dog", 0.5, 473.07, 395.93, 38.65, 28.67]``` (six elements divided by commas). The first element is the class name, the second is the model score, and then we have four bbox coordinates in the xywh format. The nested list may contain the unlimited number of elements – these are all objects predicted by the model for the respective image.
+
+Then, the system shall compare the file with predictions with the ```true_OD.json``` file containing correct answers, and display the final mAP metric.
+
+# Subtask 3 - Handwritten Text Recognition
+
+## Description
+
+Participants are given the task to recognize a handwritten text in the picture. The model input is an image with handwritten text. The model output should be a text line corresponding to the image content (in this case - the line “resulted from that”):
+
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/htr_posledoval.png)
+
+## Data
+
+**Train.** Training shall be based on a [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of two different datasets. The first one is a manually collected dataset of school copybooks. Images in this dataset are represented by individual words in a text written on a copybook page. The second part consists of a popular dataset called IAM.  It is a set of handwritten words in English.
+
+**Test public.** The public leaderboard shall also be calculated with regard to copybook datasets and IAM.
+
+**Test private.** The private test dataset is hidden from participants. It is also a dataset for text recognition in a format similar to training dataset. However, we do not provide any information on dataset details and a language used in it.
+
+## Quality metric
+
+The key metric used to evaluate the participants’ solutions shall be represented by the formula: **1 - CER**, where CER is the character error rate metric. It shall be calculated as follows:
+
+![image](https://latex.codecogs.com/svg.image?\text{CER}&space;=&space;\frac{\sum_{i=1}^n&space;\text{dist}_{c}(pred_i,&space;true_i)}{\sum_{i=1}^n&space;\text{len}_{c}(true_i)},)
+
+where dist<sub>c</sub> is the Levenshtein distance calculated for tokens (including spaces), while len<sub>c</sub> is the line length in characters.
+
+The **1 - CER** metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
+
+## Solution format
+
+Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+
+* The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```. Each file contains graphic images of characters to be translated into text characters (text lines).
+
+The participant’s model should make predictions for all images from the images folder and generate a ```prediction_HTR.json``` file. It is a dictionary in the following format:  ```{"0.txt": "correct text in the picture" , "1.txt": "predicted text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by predicted lines in the respective images. If there is no prediction for a name.png file with the image, i.e. keys of the ```prediction_HTR.json``` dictionary do not include the ```"name.png"``` key, the translation will be filled with the empty line ```""```.
+
+After inference, the metric calculation script shall compare the ```prediction_HTR.json``` and ```true_HTR.json``` files, and then display the final value of the metric for this task.
+
+The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "correct text in the picture" , "1.txt": "predicted text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
+
+# Subtask 4 - Visual Question Answering
+
+## Description
+
+## Data
+
+**Train.**
+**Test public.**
+**Test private.**
+
+## Quality metric
+
+## Solution format
