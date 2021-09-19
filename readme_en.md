@@ -280,5 +280,5 @@ RUB 300,000 for the first place in the Zero-shot object detection subtask
 RUB 300,000 for the first place in the Handwritten Text Recognition subtask
 RUB 300,000 for the first place in the Visual Question Answering subtask
     
-[Link to the Rules of the "Artificial Intelligence Journey Contest"](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/rules.pdf/download)
+[Link to the Rules of the "Artificial Intelligence Journey Contest"](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/rules.pdf/download)  
 [Terms of use](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/terms_of_use.pdf/download)
