@@ -131,7 +131,7 @@ For each object in a photo, the model predictions should be represented by bbox 
 
 Within the framework of our competition, the task is defines as zero-shot object detection. Zero-shot in the task description means that the model should be able to succesfully make predictions on a dataset completely differing from the training one. A standard object detection model is expected to predict one class out of a limited set of classes determined during the model training. A zero-shot model is expected to detect classes not found in the training set.
 
-Besides, the model should transfer the set of classes to be used for each image as a query. A query may contain classes in both Russian and English.
+The set of possible classes for each image is fed into a model as a query. A query may contain classes in both Russian and English.
 
 At the prediction stage, the model input shall contain two entities: an image and a natural-language query. The query is formatted as a text line containing a list of labels to search from. Example: “dog, bicycle, car, cake, airplane”. The query contains both correct tags (objects actually present in the picture) and some incorrect ones. Their combination makes a single search space for the model. The model should output a list of predicted tags with the corresponding bounding box coordinates.
 
