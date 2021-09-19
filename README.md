@@ -141,7 +141,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 **Train.** Для обучения предлагает использовать популярный датасет MS-COCO.
 
-[Изображения](http://images.cocodataset.org/zips/train2017.zip)
+[Изображения](http://images.cocodataset.org/zips/train2017.zip)  
 [Аннотации](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
 
 **Test public.**  Публичный тестовый датасет сформирован из части датасета [VisualGenome](https://visualgenome.org/api/v0/api_home.html); набор классов в нем скрыт от участников. 
@@ -282,5 +282,5 @@ IoU для каждой пары (prediction/true) принимает значе
 * 300 000 рублей за первое место в подзадаче Handwritten Text Recognition
 * 300 000 рублей за первое место в подзадаче Visual Question Answering
 
-[Правила проведения Конкурса "Artificial Intelligence Journey Contest"](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/rules.pdf/download)
+[Правила проведения Конкурса "Artificial Intelligence Journey Contest"](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/rules.pdf/download)  
 [Пользовательское соглашение](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/terms_of_use.pdf/download)
