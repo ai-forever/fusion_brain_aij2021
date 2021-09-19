@@ -2,6 +2,8 @@
 
 The current task suggests developing a single multitask model, which would successfully complete such multimodality subtasks as **Code2code translation (С2С), Zero-shot object detection (OD), Handwritten Text Recognition (HTR), Visual Question Answering (VQA)** and be able to break an integral metric of baseline proposed by the Arranger, as well as metrics for each subtask.
 
+We provide [a concept of a single model](https://colab.research.google.com/drive/1YAkxWG0dRKPtqy9CZxFPvCNCCXvMGr65?usp=sharing%22%20target%3D%22_parent%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fcolab.research.google.com%2Fassets%2Fcolab-badge.svg%22%20alt%3D%22Open%20In%20Colab) that is trained on several tasks related to different modalities (visual, audio and text). The concept is inspired by an article ["Pretrained Transformers as Universal Computations Engines"](https://arxiv.org/pdf/2103.05247.pdf) (```Lu et al., 2021```) that examines the ability of pretrained language models based on the Transformer architecture to form qualitative representations of arbitrary data sequences – thus, generalizing to other modalities with minimal finetuning. The basis of the architecture proposed in the concept is the pretrained GPT-2 language model; experiments are carried out both with a "frozen" model (Frozen Pretrained Transformer), and with a model in which all layers are trained on three modalities simultaneously.
+
 Uploading solutions to the Competition platform will become available from **04/10/2021**.
 
 ## General solution format
@@ -17,7 +19,7 @@ The archive root must contain the metadata.json file containing the following:
 ```
 Where ```image``` is a field with the docker image name, in which the solution will be run, ```entry_point``` is a command that runs the solution. For solution, the archive root will be the current directory. During the run, the ```DATASETS_PATH``` environment variable shall contain the route to relevant open datasets accessible from the container with the solution.
 
-An argument accepted by the script for model inference should be represented by a path to the folder with the content to be used for prediction. Let us assume that the argument shall be represented by the ```fusion_brain``` folder. Names of ```fusion_brain``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (HTR, OD, VQA, C2C) shall have the content needed for predictions. Below we discuss the structure of this content for each subtask in more detail.
+An argument accepted by the script for model inference should be represented by a path to the folder with the content to be used for prediction. Let us assume that the argument shall be represented by the ```fusion_brain``` folder. Names of ```fusion_brain``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (HTR, OD, VQA, C2C) shall have the content needed for predictions.
 
 The data structure is as follows:
 
@@ -53,6 +55,9 @@ The file have the jsonl format with java and python fields:
 ```
 {"java":"import java . util . Scanner ; \u00a0 public class A1437 { \u00a0 public static void main ( String [ ] args ) { Scanner in = new Scanner ( System . in ) ; int T = in . nextInt ( ) ; for ( int t = 0 ; t < T ; t ++ ) { int L = in . nextInt ( ) ; int R = in . nextInt ( ) ; boolean possible = R < 2 * L ; System . out . println ( possible ? \" YES \" : \" NO \" ) ; } } \u00a0 }\n","python":"t = int ( input ( ) ) NEW_LINE ans = [ ] NEW_LINE for i in range ( t ) : l , r = [ int ( x ) for x in input ( ) . split ( ) ] NEW_LINE if ( 2 * l ) > r : NEW_LINE INDENT ans . append ( \" YES \" ) else : NEW_LINE ans . append ( \" NO \" ) NEW_LINE DEDENT for j in ans : print ( j ) NEW_LINE\n"}
 ```
+
+To create a parallel training corpus, you can also use [CodeNet](https://github.com/IBM/Project_CodeNet), which contains solutions in 4 languages (C++, C, Python and Java) to 4,000 programming problems, extracted from two online judge web sites: AtCoder (the AVATAR dataset also includes solutions from this resource for some tasks) and AIZU Online Judge. However, it should be taken into account that the solutions of one programming problem in different languages are, at least, type IV clones (preserving source code semantics, but having considerable differences in syntax), but they are not guaranteed to be identical to each other, adjusted for peculiarities of languages (literal translation).
+
 **Test public.** The public leaderboard shall be generated according to the results of model prediction check based on a test set (1,693) from the AVATAR dataset.
 
 **Test private.** The private test dataset is hidden from participants. Its format is similar to the public test set.
@@ -111,7 +116,7 @@ After inference, the metric calculation script shall compare the ```prediction_
 
 ## Description
 
-* It is necessary to determine the class of an object shown in a photo (or classes, if there are several objects). For example, “human“, “car“, “apple“.
+* It is necessary to determine the class of an object shown in a photo (or classes, if there are several objects). For example, there can be such entities/objects on the photo as “human“, “car“, “apple“.
 
 * At the same time, it is necessary to determine the location and scale of each object shown in a photo. The object location shall be described with the so-called bounding box (bbox). This is a rectangle to be drawn most accurately around the object. The rectangle position shall be set with four numbers – X, Y, W, H, where:
 
@@ -134,8 +139,7 @@ At the prediction stage, the model input shall contain two entities: an image an
 
 **Train.** It is suggested that training should be based on a popular dataset called MS-COCO.
 
-[Images](http://images.cocodataset.org/zips/train2017.zip)
-
+[Images](http://images.cocodataset.org/zips/train2017.zip)  
 [Annotations](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
 
 **Test public.** The public test dataset is generated from a part of the VisualGenome dataset; a set of classes in it is hidden from participants.
@@ -167,7 +171,7 @@ Then, the system shall compare the file with predictions with the ```true_OD.jso
 
 ## Description
 
-Participants are given the task to recognize a handwritten text in the picture. The model input is an image with handwritten text. The model output should be a text line corresponding to the image content (in this case - the line “resulted from that”):
+Participants are given the task to recognize a handwritten text in the picture. The model input is an image with handwritten text. The model output should be a text line corresponding to the image content (in this case - the line “последовал”):
 
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/htr_posledoval.png)
 
@@ -195,11 +199,11 @@ Participants should create an archive with a trained model and a set of scripts 
 
 * The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```. Each file contains graphic images of characters to be translated into text characters (text lines).
 
-The participant’s model should make predictions for all images from the images folder and generate a ```prediction_HTR.json``` file. It is a dictionary in the following format:  ```{"0.txt": "predicted text in the picture" , "1.txt": "predicted text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by predicted lines in the respective images. If there is no prediction for a name.png file with the image, i.e. keys of the ```prediction_HTR.json``` dictionary do not include the ```"name.png"``` key, the translation will be filled with the empty line ```""```.
+The participant’s model should make predictions for all images from the images folder and generate a ```prediction_HTR.json``` file. It is a dictionary in the following format:  ```{"0.txt": "<predicted text in the picture>" , "1.txt": "<predicted text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by predicted lines in the respective images. If there is no prediction for a name.png file with the image, i.e. keys of the ```prediction_HTR.json``` dictionary do not include the ```"name.png"``` key, the translation will be filled with the empty line ```""```.
 
 After inference, the metric calculation script shall compare the ```prediction_HTR.json``` and ```true_HTR.json``` files, and then display the final value of the metric for this task.
 
-The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "correct text in the picture" , "1.txt": "correct text in the picture" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
+The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "<correct text in the picture>" , "1.txt": "<correct text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
 
 # Subtask 4 - Visual Question Answering
 
@@ -261,7 +265,7 @@ The prize amount shall be calculated according to the following formula:
 
 ![image](https://latex.codecogs.com/svg.image?\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
 
-where α<sub>place</sub> is a coefficient for the first, second and third places in the leaderboard (the place index means a place in the final leaderboard).  MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIXplace is a fixed prize for top solutions in the leaderboard with (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). The α<sub>place</sub> coefficient shall be calculated only for cases, where S<sub>baseline</sub> + δ ≤ S < 2.3 (see the table above).
+where α<sub>place</sub> is a coefficient for the first, second and third places in the leaderboard (the place index means a place in the final leaderboard).  MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIX<sub>place</sub> is a fixed prize for top solutions in the leaderboard with (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). The α<sub>place</sub> coefficient shall be calculated only for cases, where S<sub>baseline</sub> + δ ≤ S < 2.3 (see the table above).
     
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot_en.png)
     
@@ -276,4 +280,5 @@ RUB 300,000 for the first place in the Zero-shot object detection subtask
 RUB 300,000 for the first place in the Handwritten Text Recognition subtask
 RUB 300,000 for the first place in the Visual Question Answering subtask
     
-Link to the Rules of the AIJ Contest
+[Link to the Rules of the "Artificial Intelligence Journey Contest"](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/rules.pdf/download)
+[Terms of use](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/terms_of_use.pdf/download)
