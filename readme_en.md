@@ -1,10 +1,12 @@
 # Fusion Brain Challenge
 
-The current task suggests developing a single multitask model, which would successfully complete such multimodality subtasks as **Code2code translation (С2С), Zero-shot object detection (OD), Handwritten Text Recognition (HTR), Visual Question Answering (VQA)** and be able to break an integral metric of baseline proposed by the Arranger, as well as metrics for each subtask.
+The current task suggests developing a single multitask model that would successfully solve such multimodality subtasks as **Code2code Translation (С2С), Handwritten Text Recognition (HTR), Zero-shot Object Detection (zsOD), Visual Question Answering (VQA)** and be able to surpass the minimum value of the integral metric established by the Arranger, as well as the minimum values of the metrics for each of the sub-tasks. 
 
 We provide [a concept of a single model](https://colab.research.google.com/drive/1YAkxWG0dRKPtqy9CZxFPvCNCCXvMGr65?usp=sharing%22%20target%3D%22_parent%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fcolab.research.google.com%2Fassets%2Fcolab-badge.svg%22%20alt%3D%22Open%20In%20Colab) that is trained on several tasks related to different modalities (visual, audio and text). The concept is inspired by an article ["Pretrained Transformers as Universal Computations Engines"](https://arxiv.org/pdf/2103.05247.pdf) (```Lu et al., 2021```) that examines the ability of pretrained language models based on the Transformer architecture to form qualitative representations of arbitrary data sequences – thus, generalizing to other modalities with minimal finetuning. The basis of the architecture proposed in the concept is the pretrained GPT-2 language model; experiments are carried out both with a "frozen" model (Frozen Pretrained Transformer), and with a model in which all layers are trained on three modalities simultaneously.
 
-Uploading solutions to the Competition platform will become available from **04/10/2021**.
+To be awarded for a single multitask model, a Participant should submit a model with **at least 30%** of shared weights — parameters which are common to all modalities. These parameters should not be purely nominal; on the contrary, they should be used in a meaningful way during the prediction of the model and have a beneficial effect on model’s quality. Otherwise, the model is considered to be unitask. The model must also surpass the minimum metric values established by the Arranger for each of the subtasks, and therefore surpass the minimum integral metric.
+
+Uploading solutions to the Competition platform will become available from **01/10/2021**.
 
 ## General solution format
 
@@ -19,23 +21,23 @@ The archive root must contain the metadata.json file containing the following:
 ```
 Where ```image``` is a field with the docker image name, in which the solution will be run, ```entry_point``` is a command that runs the solution. For solution, the archive root will be the current directory. During the run, the ```DATASETS_PATH``` environment variable shall contain the route to relevant open datasets accessible from the container with the solution.
 
-An argument accepted by the script for model inference should be represented by a path to the folder with the content to be used for prediction. Let us assume that the argument shall be represented by the ```fusion_brain``` folder. Names of ```fusion_brain``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (HTR, OD, VQA, C2C) shall have the content needed for predictions.
+An argument accepted by the script for model inference should be represented by a path to the folder with the content to be used for prediction. Let us assume that the argument shall be represented by the ```fusion_brain``` folder. Names of ```fusion_brain``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (C2C, HTR, zsOD, VQA) shall have the content needed for predictions.
 
 The data structure is as follows:
 
 * fusion_brain
+  * C2C 
+    * requests.json
   * HTR
     * images 
-  * OD
+  * zsOD
     * images
     * requests.json
   * VQA
     * images
     * questions.json
-  * C2C 
-    * requests.json
 
-The single model should generate predictions for each subtask in the ```prediction_{TASK_NAME}.json``` format, i.e. there should be four files after the model inference: ```prediction_HTR.json, prediction_OD.json, prediction_VQA.json, prediction_C2C.json```. These files should be located in the root of uploaded file with the solution.
+The single model should generate predictions for each subtask in the ```prediction_{TASK_NAME}.json``` format, i.e. there should be four files after the model inference: ```prediction_C2C.json, prediction_HTR.json, prediction_zsOD.json, prediction_VQA.json```. These files should be located in the root of uploaded file with the solution.
 
 After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be added to the container and a script for calculation of metrics for each subtask shall be run. The final metric shall be calculated as a sum of metrics for each subtask (see below).
 
@@ -43,7 +45,7 @@ After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be 
 
 ## Description
 
-A task of translation from one programming language into another is a standard part of the wide-ranging repertoire of ML4Code. As of today, there are several alternate solutions – in line with both supervised learning, where a training dataset is represented by a parallel corpus (baseline model of the CodeXGLUE benchmark with CodeBERT as a coder in the coder-decoder-type architecture, ```Lu et al., 2021```), and unsupervised one, including pretraining of cross-lingual language model on monolingual corpora (TransCoder, ```Lachaux et al., 2020```). 
+A task of translation from one programming language into another is a standard part of the wide-ranging repertoire of ML4Code. As of today, there are several alternate solutions – in line with both supervised learning, where a training dataset is represented by a parallel corpus (baseline model of the CodeXGLUE benchmark with CodeBERT as encoder in the encoder-decoder architecture, ```Lu et al., 2021```), and unsupervised one, including pretraining of cross-lingual language model on monolingual corpora (TransCoder, ```Lachaux et al., 2020```). 
 
 Cases where a source language and a target language have different type systems are particularly problematic. It is that very class that our subtask belongs to: we should translate from a statically-typed language (Java) to a dynamically-typed one (Python). The input is a Java function and the output should be the similar function in Python.
 
@@ -51,7 +53,7 @@ Cases where a source language and a target language have different type systems 
 
 **Train.** It is suggested that the training dataset should be represented by train (5,937 programmer tasks) and val (845) parts of the [AVATAR](https://github.com/wasiahmad/AVATAR) parallel corpus consisting of pairs of similar functions/programs, one of which is written in Java, while the other is written in Python. Due to the fact that the dataset contains 1-25 candidate solutions in both programming languages, it shall be possible to generate 1-25 parallel examples for each task. The dataset authors suggest choosing no more than three solutions for each language - therefore, there will be no more than nine training examples for one problem. We suggest using a [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/%D0%A12%D0%A1_translation/CodeToCodeTranslation_train_java_python.jsonl) generated in this very manner.
 
-The file have the jsonl format with java and python fields:
+The file have the jsonl format with "java" and "python" fields:
 ```
 {"java":"import java . util . Scanner ; \u00a0 public class A1437 { \u00a0 public static void main ( String [ ] args ) { Scanner in = new Scanner ( System . in ) ; int T = in . nextInt ( ) ; for ( int t = 0 ; t < T ; t ++ ) { int L = in . nextInt ( ) ; int R = in . nextInt ( ) ; boolean possible = R < 2 * L ; System . out . println ( possible ? \" YES \" : \" NO \" ) ; } } \u00a0 }\n","python":"t = int ( input ( ) ) NEW_LINE ans = [ ] NEW_LINE for i in range ( t ) : l , r = [ int ( x ) for x in input ( ) . split ( ) ] NEW_LINE if ( 2 * l ) > r : NEW_LINE INDENT ans . append ( \" YES \" ) else : NEW_LINE ans . append ( \" NO \" ) NEW_LINE DEDENT for j in ans : print ( j ) NEW_LINE\n"}
 ```
@@ -112,72 +114,17 @@ The participant’s model should translate all examples from the requests.json f
 
 After inference, the metric calculation script shall compare the ```prediction_С2С.json``` and ```true_С2С.json``` files, and then display the final value of the CodeBLEU metric.
 
-# Subtask 2 - Zero-shot object detection
+# Subtask 2 - Handwritten Text Recognition
 
 ## Description
 
-* It is necessary to determine the class of an object shown in a photo (or classes, if there are several objects). For example, there can be such entities/objects on the photo as “human“, “car“, “apple“.
-
-* At the same time, it is necessary to determine the location and scale of each object shown in a photo. The object location shall be described with the so-called bounding box (bbox). This is a rectangle to be drawn most accurately around the object. The rectangle position shall be set with four numbers – X, Y, W, H, where:
-
-    * X is a horizontal coordinate of the top left corner
-    * Y is a vertical coordinate of the top left corner
-    * W is the rectangle width
-    * H is the rectangle height
-
-For each object in a photo, the model predictions should be represented by bbox coordinates and a class tag. An example of the result of object detection model work is shown in the next picture:
-
-![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/od.png)
-
-Within the framework of our competition, the task is defines as zero-shot object detection. Zero-shot in the task description means that the model should be able to succesfully make predictions on a dataset completely differing from the training one. A standard object detection model is expected to predict one class out of a limited set of classes determined during the model training. A zero-shot model is expected to detect classes not found in the training set.
-
-The set of possible classes for each image is fed into a model as a query. The query may contain classes in Russian or in English.
-
-At the prediction stage, the model input shall contain two entities: an image and a natural-language query. The query is formatted as a text line containing a list of labels to search from. Example: “dog, bicycle, car, cake, airplane”. The query contains both correct tags (objects actually present in the picture) and some incorrect ones. Their combination makes a single search space for the model. The model should output a list of predicted tags with the corresponding bounding box coordinates.
-
-## Data
-
-**Train.** It is suggested that training should be based on a popular dataset called MS-COCO.
-
-[Images](http://images.cocodataset.org/zips/train2017.zip)  
-[Annotations](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
-
-**Test public.** The public test dataset is generated from a part of the VisualGenome dataset; a set of classes in it is hidden from participants.
-
-**Test private.** The private test dataset is hidden from participants, just as a set of classes in it.
-
-## Quality metric
-
-The quality will be evaluated using the **mean average precision** (mAP) metric. To calculate mAP, you should choose IoU (intersection over union) first. This metric evaluates the match quality of the predicted bbox and the reference one. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
-
-![image](https://latex.codecogs.com/svg.image?\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
-
-For each pair (prediction/true), IoU ranges from 0 to 1. The cutting threshold for IoU is 0.5, meaning that all bboxes with their IoU below 0.5 are deemed false predictions.
-
-For each class with a certain IoU value, the Precision-Recall curve shall be drawn and the area below the curve shall be calculated. The calculations shall be averaged by class to arrive at the final mAP metric.
-
-## Solution format
-
-Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
-
-* The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```.
-* The ```requests.json``` file. It is a dictionary in the following format: ```{ "0.jpg": ["tree", "clock", "book"] , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by a list of classes to be detected in the respective image (query). As we said before, the list of classes may be whether in Russian or in English. Therefore, the query contains the list of labels to search from (for example, “dog, bicycle, car, cake, airplane”). **The query contains both correct tags belonging to objects actually present in the image and some incorrect labels (there no respective objects in the picture)**.
-
-The participant’s model should make predictions for all images from the images folder and generate a ```prediction_OD.json``` file. It is a dictionary in the following format: ```{"0.jpg": [["dog", 0.5, 473.07, 395.93, 38.65, 28.67], ["cat", 0.6, 0.0, 101.15, 452.3, 319.43]], ...```. Keys shall be represented by names of files from the images folder, while values shall be represented by model predictions for the respective images. These predictions should contain detected classes, together with coordinates of bounding boxes for the respective image: the key “name of file with the image” shall be used for showing a list of objects predicted on it. Format of one element in the list: ```["dog", 0.5, 473.07, 395.93, 38.65, 28.67]``` (six elements divided by commas). The first element is the class name, the second is the model score, and then we have four bbox coordinates in the ```xywh``` format. The nested list may contain the unlimited number of elements – these are all objects predicted by the model for the respective image.
-
-Then, the system shall compare the file with predictions with the ```true_OD.json``` file containing correct answers, and display the final mAP metric.
-
-# Subtask 3 - Handwritten Text Recognition
-
-## Description
-
-Participants are given the task to recognize a handwritten text in the picture. The model input is an image with handwritten text. The model output should be a text line corresponding to the image content (in this case - the line “последовал”):
+Participants are given the task to recognize a handwritten text in the picture. The model input is an image with a text written in English or Russian. The model output should be a text line corresponding to the image content (in this case - the line “последовал”):
 
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/htr_posledoval.png)
 
 ## Data
 
-**Train.** We provide a training [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of two different datasets. The first one is a manually collected dataset of school copybooks. Images in this dataset are represented by individual words in a text written on a copybook page. The second part consists of a popular dataset called IAM. It is a set of handwritten words in English.
+**Train.** We provide a training [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of two different datasets. The first one is a manually collected dataset of school copybooks. Images in this dataset are represented by individual words in a text written with the Cyrillic characters on a copybook page. The second part consists of a popular dataset called IAM. It is a set of handwritten words in English.
 
 **Test public.** The public leaderboard shall also be calculated with regard to copybook datasets and IAM.
 
@@ -204,6 +151,64 @@ The participant’s model should make predictions for all images from the images
 After inference, the metric calculation script shall compare the ```prediction_HTR.json``` and ```true_HTR.json``` files, and then display the final value of the metric for this task.
 
 The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "<correct text in the picture>" , "1.txt": "<correct text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
+
+
+# Subtask 3 - Zero-shot object detection
+
+## Description
+
+* It is necessary to determine the correct description of the object depicted in the photo (or objects, if there are several). For example, there can be such entities/objects on the photo that could be described in natural language as "green apple lying on the ground”, "man jumping over fire hydrant”, "woman in shorts".
+
+* At the same time, it is necessary to determine the location and scale of each object shown in a photo. The object location shall be described with the so-called bounding box (bbox). This is a rectangle to be drawn most accurately around the object. The rectangle position shall be set with four numbers – X, Y, W, H, where:
+
+    * X is a horizontal coordinate of the top left corner
+    * Y is a vertical coordinate of the top left corner
+    * W is the rectangle width
+    * H is the rectangle height
+
+For each object in a photo, the model predictions should be represented by bbox coordinates and a class (a description in natural language) for each object in the photo.  An example of the result of object detection model work is shown in the next picture:
+
+![image](https://media.springernature.com/full/springer-static/image/art%3A10.1007%2Fs11263-016-0981-7/MediaObjects/11263_2016_981_Fig5_HTML.jpg?as=webp)
+
+Within the framework of our competition, the task is defines as zero-shot object detection. Zero-shot in the task description means that the model should be able to succesfully make predictions on a dataset completely differing from the training one. A standard object detection model is expected to predict one class out of a limited set of classes determined during the model training. A zero-shot model is expected to detect classes not found in the training set.
+
+The set of possible classes for each image is fed into a model as a query. The query may contain classes in Russian or in English.
+
+At the prediction stage, the model input shall contain two entities: an image and a natural-language query. The query is formatted as a text line containing a list of labels (descriptions) to search from. Example: ```"red apple hanging on a branch", "bald man", "girl feeding an elephant"```. The query contains both correct descriptions (related to objects actually present in the picture) and some incorrect ones. Their combination makes a single search space for the model. The model should output a list of predicted classes with the corresponding bounding box coordinates.
+
+## Data
+
+**Train.** It is suggested that training should be based on a popular dataset called MS-COCO:
+
+[Images](http://images.cocodataset.org/zips/train2017.zip)    
+[Annotations](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
+
+It is also worth using the [VisualGenome dataset](https://visualgenome.org/api/v0/api_home.html), except for the [images](https://dsworks.s3pd01.sbercloud.ru/aij2021/zsOD/images_ids_Visual_Genome_to_exclude.json) included in the public test dataset (so that the results of the public leaderboard are indicative for the participants).
+
+**Test public.** The public test dataset is generated from a part of the VisualGenome dataset; a set of classes in it is hidden from participants.
+
+**Test private.** The private test dataset is hidden from participants, just as a set of classes in it.
+
+## Quality metric
+
+The quality will be evaluated using the **mean average precision** (mAP) metric. To calculate mAP, you should choose IoU (intersection over union) first. This metric evaluates the match quality of the predicted bbox and the reference one. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
+
+![image](https://latex.codecogs.com/svg.image?\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
+
+For each pair (prediction/true), IoU ranges from 0 to 1. The cutting threshold for IoU is 0.5, meaning that all bboxes with their IoU below 0.5 are deemed false predictions.
+
+For each class with a certain IoU value, the Precision-Recall curve shall be drawn and the area below the curve shall be calculated. The calculations shall be averaged by class to arrive at the final mAP metric.
+
+## Solution format
+
+Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+
+* The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```.
+* The ```requests.json``` file. It is a dictionary in the following format: ```{ "0.jpg": ["red apple hanging on a branch", "bald man", "girl feeding an elephant"] , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by a list of classes to be detected in the respective image (query). As we said before, the list of classes (descriptions in natural language) may be whether in Russian or in English. Therefore, the query contains the list of classes to search from. **The query contains both correct descriptions belonging to objects actually present in the image and some incorrect descriptions (there no respective objects in the picture)**.
+
+The participant’s model should make predictions for all images from the images folder and generate a ```prediction_OD.json``` file. It is a dictionary in the following format: ```{"0.jpg": [["red apple hanging on a branch", 0.5, 473.07, 395.93, 38.65, 28.67], ["girl feeding an elephant", 0.6, 0.0, 101.15, 452.3, 319.43]], ...```. Keys shall be represented by names of files from the images folder, while values shall be represented by model predictions for the respective images. These predictions should contain detected classes, together with coordinates of bounding boxes for the respective image: the key “name of file with the image” shall be used for showing a list of objects predicted on it. Format of one element in the list: ```["red apple hanging on a branch", 0.5, 473.07, 395.93, 38.65, 28.67]``` (six elements divided by commas). The first element is the class name, the second is the model score, and then we have four bbox coordinates in the ```xywh``` format. The nested list may contain the unlimited number of elements – these are all objects predicted by the model for the respective image.
+
+Then, the system shall compare the file with predictions with the ```true_OD.json``` file containing correct answers, and display the final mAP metric.
 
 # Subtask 4 - Visual Question Answering
 
@@ -245,40 +250,54 @@ After inference, the metric calculation script shall compare the ```prediction_
 
 # Integral metric
 
-The final score shall be composed of scores for subtasks:
+The final score of multitask model shall be composed of scores for subtasks:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
 
 where S is a final score of the participant, S<sub>1</sub> is a score for the Code2code translation subtask, S<sub>2</sub> is a score for the Zero-shot object detection subtask, S<sub>3</sub> is a score for the Handwritten Text Recognition subtask, S<sub>4</sub> is a score for the Visual Question Answering subtask.
 
-Scores for each subtask will take values from 0 to 1 (the only exception is the CodeBLEU metric used to evaluate Code2code translation: it may take values within the range from 0 to 100 – with a view to normalize it, the metric will be multiplied by 0.01) – therefore, the lowest value of the final score will be 0, while the highest one will be 4. Calculation of scores for each subtask shall be rounded to the third decimal place. The final score value shall serve as the basis for generating a leaderboard for the Fusion Brain Challenge task.
+Scores for each subtask will take values from 0 to 1 (the only exception is the CodeBLEU metric used to evaluate Code2code Translation: it may take values within the range from 0 to 100 – with a view to normalize it, the metric will be multiplied by 0.01) – therefore, the lowest value of the final score will be 0, while the highest one will be 4. Calculation of scores for each subtask shall be rounded to the third decimal place. The final score value shall serve as the basis for generating a leaderboard for the Fusion Brain Challenge task.
 
 # Prize pool
 
-For each winning place there is a fixed prize (FIX). The bonus shall depend on the winners’ final scores, but not exceeding the difference between the maximum (MAX) and fixed value. In each task, it is necessary to outperform the baseline. In each task, it is necessary to surpass baseline metrics for each subtask, while the integral metric should surpass the integral baseline metric at least by 0.15 (δ).
+The possible Prize depends on whether the proposed architecture is a single mulitask model (with at least 30% of shared weights – parameters which are common to all modalities) or a unitask model (solving one subtask).
+
+For each winning place there is a fixed prize (FIX). The bonus shall depend on the winners’ final scores, but not exceeding the difference between the maximum (MAX) and fixed value. It is necessary to surpass the minimum values of the metrics established for each subtask — and, consequently, the minimum value of the integral metric.
+
+The minimum values for each of the subtasks are the following:
+
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/S_mins_en.png)
+
+The minimum value of the integral score S<sub>min</sub> is calculated as follows:
+
+![image](https://latex.codecogs.com/svg.image?\textrm{S}_{min}&space;=&space;\textrm{S}_{min}^{1}&space;&plus;&space;\textrm{S}_{min}^{2}&space;&plus;&space;\textrm{S}_{min}^{3}&space;&plus;&space;\textrm{S}_{min}^{4}&space;=&space;0.2&space;&plus;&space;0.6&space;&plus;&space;0.15&space;&plus;&space;0.35&space;=&space;1.3)
 
 The prize amount shall be calculated according to the following formula:
 
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize.png)
 
-, where S is the participant’s final score, S<sub>baseline</sub> is the baseline final score, δ = 0.15 is the lowest value for surpassing the baseline final score, while the α coefficient shall depend on the place in leaderboard (Top-3 solutions) and be calculated as follows:
+, where S is the participant’s final score, S<sub>min</sub> is the minimum value of the final score, while the α coefficient shall depend on the place in leaderboard (Top-3 solutions) and be calculated as follows:
 
 ![image](https://latex.codecogs.com/svg.image?\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
 
-where α<sub>place</sub> is a coefficient for the first, second and third places in the leaderboard (the place index means a place in the final leaderboard).  MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIX<sub>place</sub> is a fixed prize for top solutions in the leaderboard with (S<sub>baseline</sub> + δ) ≤ S < 2.3 (FIX<sub>1</sub> = 1, FIX<sub>2</sub> = 0.5, FIX<sub>3</sub> = 0.2). The α<sub>place</sub> coefficient shall be calculated only for cases, where S<sub>baseline</sub> + δ ≤ S < 2.3 (see the table above).
+where α<sub>place</sub> is a coefficient for calculating the bonus for the first, second and third places in the leaderboard (α_1 = 2, α_2 = 1, α_3 = 0.6) for cases, where S<sub>min</sub> ≤ S < 2.3. MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIX<sub>place</sub> is a fixed prize for top solutions in the leaderboard with S<sub>min</sub> ≤ S < 2.3 (FIX<sub>1</sub> = RUB 1 million, FIX<sub>2</sub> = RUB 0.5 million, FIX<sub>3</sub> = RUB 0.2 million).
     
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot_en.png)
+
+**Nominations related to the creation of a multitask model**:
     
 **First place**: from RUB 1,000,000 to RUB 3,000,000 (depending on the quality of participant’s solution)  
 **Second place**: from RUB 500,000 to RUB 1,500,000 (depending on the quality of participant’s solution)  
 **Third place**: from RUB 200 000 to RUB 800,000 (depending on the quality of participant’s solution)  
     
-**Additional categories**:
+**Additional nominations**:
+
+The Arranger will evaluate the best solutions for each of the subtasks, for which the participant/team of participants who showed the best result will also be able to get a Prize, regardless of whether the presented model is multitask (solving all subtasks with a single architecture) or unitask (solving one subtask). For each of the subtasks, the best solution will be chosen based on the leaderboard for these subtasks; the presented model should surpass the minimum value of the metric for the corresponding subtask (the minimum values are described above).
     
-RUB 300,000 for the first place in the Code2code translation subtask  
-RUB 300,000 for the first place in the Zero-shot object detection subtask  
-RUB 300,000 for the first place in the Handwritten Text Recognition subtask  
-RUB 300,000 for the first place in the Visual Question Answering subtask
+* RUB 300,000 for the first place in the Code2code translation subtask  
+* RUB 300,000 for the first place in the Zero-shot object detection subtask  
+* RUB 300,000 for the first place in the Handwritten Text Recognition subtask  
+* RUB 300,000 for the first place in the Visual Question Answering subtask
     
-[Link to the Rules of the "Artificial Intelligence Journey Contest"](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/rules.pdf/download)  
+[Link to the Rules of the "Artificial Intelligence Journey Contest"](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/rules.pdf/download)    
 [Terms of use](https://api.dsworks.ru/dsworks-transfer/api/v1/public/file/terms_of_use.pdf/download)
