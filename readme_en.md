@@ -168,7 +168,7 @@ The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "<c
 
 For each object in a photo, the model predictions should be represented by bbox coordinates and a class (a description in natural language) for each object in the photo.  An example of the result of object detection model work is shown in the next picture:
 
-![image](https://media.springernature.com/full/springer-static/image/art%3A10.1007%2Fs11263-016-0981-7/MediaObjects/11263_2016_981_Fig5_HTML.jpg?as=webp)
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/vg_region_description.png)
 
 Within the framework of our competition, the task is defines as zero-shot object detection. Zero-shot in the task description means that the model should be able to succesfully make predictions on a dataset completely differing from the training one. A standard object detection model is expected to predict one class out of a limited set of classes determined during the model training. A zero-shot model is expected to detect classes not found in the training set.
 
@@ -191,13 +191,32 @@ It is also worth using the [VisualGenome dataset](https://visualgenome.org/api/v
 
 ## Quality metric
 
-The quality will be evaluated using the **mean average precision** (mAP) metric. To calculate mAP, you should choose IoU (intersection over union) first. This metric evaluates the match quality of the predicted bbox and the reference one. It shall be calculated as the intersection area of these two bboxes divided by their combination area:
+The quality will be evaluated using the **F1-score**:
+
+![image](https://latex.codecogs.com/svg.image?\textrm{F1}=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
+
+F1-score is calculated based on Precision and Recall, which, in turn, depend on a set of prediction statistics - true positive (TP), false positive (FP) and false negative (FN):
+
+![image](https://latex.codecogs.com/svg.image?\textrm{Precision}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}},)
+
+![image](https://latex.codecogs.com/svg.image?\textrm{Recall}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Negative}})
+
+The rules according to which the prediction of the model belongs to one of the types are the following:
+
+* if the given class from the request is absent in the correct annotations (that is, it is a negative example), but the participant's model made a prediction for it, the prediction is considered as *FP*
+* if the given class from the request is present in the correct annotations (that is, it is a positive example):
+  * the predicted bboxes for a given class are sorted by their probability value (in descending order) to obtain a top-k bounding boxes, where k is the number of valid bboxes for this class. Thus, if there is one bbox in the given image for a given class in the correct annotations, then we compare it with one prediction with the highest probability value
+  * for each bbox of a given class from the correct annotations (a class can have multiple corresponding bboxes in the image):
+    * if the intersection of the correct bbox with at least one of the predicted top-k bboxes for this class by IoU > 0.5 - the prediction is considered as *TP*
+    * if the intersection of the correct bbox with each of the predicted top-k bboxes for the given label by IoU < 0.5 - the prediction is considered as *FN*.
+    
+IoU is a metric that evaluates the quality of the match between the predicted bbox and the reference one. It is calculated as the ratio of the intersection area to the area of the union of these two bboxes:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
 
-For each pair (prediction/true), IoU ranges from 0 to 1. The cutting threshold for IoU is 0.5, meaning that all bboxes with their IoU below 0.5 are deemed false predictions.
+The IoU for each pair (prediction/true) takes a value from 0 to 1. The IoU cutoff threshold is 0.5, that is, all predicted bboxes with an IoU value less than 0.5 are considered as false predictions.
 
-For each class with a certain IoU value, the Precision-Recall curve shall be drawn and the area below the curve shall be calculated. The calculations shall be averaged by class to arrive at the final mAP metric.
+The **F1-score** metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
 
 ## Solution format
 
