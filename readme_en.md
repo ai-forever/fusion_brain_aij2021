@@ -106,7 +106,7 @@ where Count(DF<sub>ref</sub>) is a total number of data flows in the reference c
 
 ## Solution format
 
-Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+Data for prediction shall include:
 
 * The ```requests.json``` file. It is a dictionary in the following format: ```{ "0": "import java . util . Scanner ; ..." , ... }```. Keys shall be represented by sample indices, while values shall be represented by lines of functions/programs in Java that should be translated into Python.
 
@@ -142,7 +142,7 @@ The 1 - CER metric varies from 0 to 1, where 0 is the worst value and 1 is the b
 
 ## Solution format
 
-Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+Data for prediction shall include:
 
 * The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.png, 1.png ...```. Each file contains graphic images of characters to be translated into text characters (text lines).
 
@@ -174,7 +174,7 @@ Within the framework of our competition, the task is defines as zero-shot object
 
 The set of possible classes for each image is fed into a model as a query. The query may contain classes in Russian or in English.
 
-At the prediction stage, the model input shall contain two entities: an image and a natural-language query. The query is formatted as a text line containing a list of labels (descriptions) to search from. Example: ```"red apple hanging on a branch", "bald man", "girl feeding an elephant"```. The query contains both correct descriptions (related to objects actually present in the picture) and some incorrect ones. Their combination makes a single search space for the model. The model should output a list of predicted classes with the corresponding bounding box coordinates.
+At the prediction stage, the model input shall contain two entities: an image and a natural-language query. The query is formatted as a list of text lines (descriptions) – classes to search from. Example: ```"red apple hanging on a branch", "bald man", "girl feeding an elephant"```. The query contains both correct descriptions (related to objects actually present in the picture) and some incorrect ones. Their combination makes a single search space for the model. The model should output a list of predicted classes with the corresponding bounding box coordinates.
 
 ## Data
 
@@ -221,7 +221,7 @@ The F1-score metric varies from 0 to 1, where 0 is the worst value and 1 is the 
 
 ## Solution format
 
-Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+Data for prediction shall include:
 
 * The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```.
 * The ```requests.json``` file. It is a dictionary in the following format: ```{ "0.jpg": ["red apple hanging on a branch", "bald man", "girl feeding an elephant"] , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by a list of classes to be detected in the respective image (query). As we said before, the list of classes (descriptions in natural language) may be whether in Russian or in English. Therefore, the query contains the list of classes to search from. **The query contains both correct descriptions belonging to objects actually present in the image and some incorrect descriptions (there no respective objects in the picture)**.
@@ -260,7 +260,7 @@ The quality will be evaluated using the **accuracy** metric. It reflects the per
 
 ## Solution format
 
-Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
+Data for prediction shall include:
 
 * The ```images``` folder.  It is a set of images, to which the answers refer. It contains files in the following format: ```0.jpg, 1.jpg ...```.
 * The ```questions.json``` file. It is a dictionary in the following format: ```{ "0": {"image_id": "1.jpg", "question": "Where is he looking?"} , ... }```. Keys shall be represented by sample indices, while values shall be represented by a dictionary with "image_id" (value: name of a file from the images folder) and "question" (value: text of a question for the respective image) fields. Questions may be asked in English or in Russian.
