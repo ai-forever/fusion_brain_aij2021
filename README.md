@@ -144,7 +144,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 ![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{StringAcc}&space;=&space;\frac{\sum_{i=1}^n&space;[\text{pred}_i&space;=&space;\text{true}_i]}{n})
 
-Здесь ![image](https://latex.codecogs.com/svg.image?\color{Blue}n) - размер тестовой выборки, ![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{pred}_i) - это строка из символов, которую распознала модель на ![image](https://latex.codecogs.com/svg.image?\color{Blue}i)-ом изображении в выборке, а ![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{true}_i) - это правильный перевод ![image](https://latex.codecogs.com/svg.image?\color{Blue}i)-ого изображения, произведенный аннотатором, ![image](https://latex.codecogs.com/svg.image?\color{Blue}[\cdot]) - скобка Айверсона:
+Здесь n - размер тестовой выборки, pred<sub>i</sub> – это строка из символов, которую распознала модель на i-ом изображении в выборке, а true<sub>i<sub> - это правильный перевод i-ого изображения, произведенный аннотатором, [•] - скобка Айверсона:
 
 ![image](https://latex.codecogs.com/svg.image?\color{Blue}[x = y]&space;=&space;\begin{cases} &space; 1,&space;x&space;=&space;y,\\&space;0, &space; x&space;\neq&space;y\end{cases})
 
@@ -263,7 +263,7 @@ IoU для каждой пары (prediction/true) принимает значе
 
 ## Метрика качества
 
-Для оценки качества предсказания будет использоваться метрика **accuracy**. Эта метрика показывает долю точных совпадений среди пар предсказанных и истинных ответов, то есть отражает отношение числа совпавших ответов (когда модель участника предсказала такой же ответ, как истинный) к общему числу ответов. Эта метрика изменяется от 0 до 1, где 0 - наихудшее значение, 1 - наилучшее:
+Для оценки качества предсказания будет использоваться метрика **Accuracy**. Эта метрика показывает долю точных совпадений среди пар предсказанных и истинных ответов, то есть отражает отношение числа совпавших ответов (когда модель участника предсказала такой же ответ, как истинный) к общему числу ответов. Эта метрика изменяется от 0 до 1, где 0 - наихудшее значение, 1 - наилучшее:
 
 ![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{accuracy}&space;=\frac{&space;\textrm{True&space;answers}}{&space;\textrm{All&space;answers}})
 
