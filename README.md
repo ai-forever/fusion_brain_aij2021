@@ -192,14 +192,6 @@ CodeBLEU представляет собой взвешенную комбина
 
 ## Метрика качества
 
-Для оценки качества будет использоваться метрика **mean average precision** (mAP). Для вычисления mAP сначала нужно выбрать IoU (intersection over union). Это метрика, которая оценивает качество совпадения предсказанного bbox и эталонного. Она вычисляется как отношение площади пересечения к площади объединения этих двух bbox:
-
-![image](https://latex.codecogs.com/svg.image?\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
-
-IoU для каждой пары (prediction/true) принимает значение от 0 до 1. В качестве порога отсечения по IoU используется значение 0.5, то есть все предсказанные bbox, значение IoU для которых меньше 0.5, считаются ложными прогнозами.
-
-Для каждого класса с выбранным значением IoU строится кривая Precision-Recall, затем вычисляется площадь под этой кривой. Это значение усредняется по всем классам, и получается финальное значение метрики mAP.
-
 Для оценки качества будет использоваться метрика **F1-score**:
 
 ![image](https://latex.codecogs.com/svg.image?F1=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
