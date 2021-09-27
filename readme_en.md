@@ -106,7 +106,7 @@ where Count(DF<sub>ref</sub>) is a total number of data flows in the reference c
 
 ## Solution format
 
-Data for prediction shall include:
+Data for prediction related to this subtask shall include:
 
 * The ```requests.json``` file. It is a dictionary in the following format: ```{ "0": "import java . util . Scanner ; ..." , ... }```. Keys shall be represented by sample indices, while values shall be represented by lines of functions/programs in Java that should be translated into Python.
 
@@ -142,7 +142,7 @@ The 1 - CER metric varies from 0 to 1, where 0 is the worst value and 1 is the b
 
 ## Solution format
 
-Data for prediction shall include:
+Data for prediction related to this subtask shall include:
 
 * The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.png, 1.png ...```. Each file contains graphic images of characters to be translated into text characters (text lines).
 
@@ -221,7 +221,7 @@ The F1-score metric varies from 0 to 1, where 0 is the worst value and 1 is the 
 
 ## Solution format
 
-Data for prediction shall include:
+Data for prediction related to this subtask shall include:
 
 * The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```.
 * The ```requests.json``` file. It is a dictionary in the following format: ```{ "0.jpg": ["red apple hanging on a branch", "bald man", "girl feeding an elephant"] , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by a list of classes to be detected in the respective image (query). As we said before, the list of classes (descriptions in natural language) may be whether in Russian or in English. Therefore, the query contains the list of classes to search from. **The query contains both correct descriptions belonging to objects actually present in the image and some incorrect descriptions (there no respective objects in the picture)**.
@@ -260,7 +260,7 @@ The quality will be evaluated using the **accuracy** metric. It reflects the per
 
 ## Solution format
 
-Data for prediction shall include:
+Data for prediction related to this subtask shall include:
 
 * The ```images``` folder.  It is a set of images, to which the answers refer. It contains files in the following format: ```0.jpg, 1.jpg ...```.
 * The ```questions.json``` file. It is a dictionary in the following format: ```{ "0": {"image_id": "1.jpg", "question": "Where is he looking?"} , ... }```. Keys shall be represented by sample indices, while values shall be represented by a dictionary with "image_id" (value: name of a file from the images folder) and "question" (value: text of a question for the respective image) fields. Questions may be asked in English or in Russian.
