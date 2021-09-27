@@ -6,7 +6,7 @@ We provide [a concept of a single model](https://colab.research.google.com/drive
 
 In order for the model presented by the team/participant to be considered as multitask, it is necessary and sufficient to meet the following criteria:
 
-1) shared weights should be **at least 30%** of all model parameters: *if ![image](https://latex.codecogs.com/svg.image?\color{Blue}N) is the total number of parameters of the models that solve 4 subtasks, and ![image](https://latex.codecogs.com/svg.image?\color{Blue}M) is the number of common parameters of these models (that is, they are identical both in value and architecturally), then it is necessary that ![image](https://latex.codecogs.com/svg.image?\color{Blue}M/N\geqslant&space;0.3))*
+1) shared weights should be **at least 30%** of all model parameters: *if ![image](https://latex.codecogs.com/svg.image?\color{Blue}N) is the total number of parameters of the models that solve 4 subtasks, and ![image](https://latex.codecogs.com/svg.image?\color{Blue}M) is the number of common parameters of these models (that is, they are identical both in value and architecturally), then it is necessary that ![image](https://latex.codecogs.com/svg.image?\color{Blue}M/N\geqslant&space;0.3)*
 
 2) common parameters should not be purely nominal - on the contrary, they should be used in a meaningful way during the prediction of the model and have a beneficial effect on model’s quality.
 
