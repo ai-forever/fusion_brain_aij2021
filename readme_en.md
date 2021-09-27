@@ -144,13 +144,13 @@ The 1 - CER metric varies from 0 to 1, where 0 is the worst value and 1 is the b
 
 Participants should create an archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container, while the system shall add the data for prediction to the container space. Such data shall include:
 
-* The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.jpg, 1.jpg ...```. Each file contains graphic images of characters to be translated into text characters (text lines).
+* The ```images``` folder.  It is a set of images to make predictions for. It contains files in the following format: ```0.png, 1.png ...```. Each file contains graphic images of characters to be translated into text characters (text lines).
 
-The participant’s model should make predictions for all images from the images folder and generate a ```prediction_HTR.json``` file. It is a dictionary in the following format:  ```{"0.txt": "<predicted text in the picture>" , "1.txt": "<predicted text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by predicted lines in the respective images. If there is no prediction for a name.png file with the image, i.e. keys of the ```prediction_HTR.json``` dictionary do not include the ```"name.png"``` key, the translation will be filled with the empty line ```""```.
+The participant’s model should make predictions for all images from the images folder and generate a ```prediction_HTR.json``` file. It is a dictionary in the following format:  ```{"0.png": "<predicted text in the picture>" , "1.png": "<predicted text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by predicted lines in the respective images. If there is no prediction for a name.png file with the image, i.e. keys of the ```prediction_HTR.json``` dictionary do not include the ```"name.png"``` key, the translation will be filled with the empty line ```""```.
 
 After inference, the metric calculation script shall compare the ```prediction_HTR.json``` and ```true_HTR.json``` files, and then display the final value of the metric for this task.
 
-The ```true_HTR.json``` file shall have the following format:  ```{"0.txt": "<correct text in the picture>" , "1.txt": "<correct text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
+The ```true_HTR.json``` file shall have the following format:  ```{"0.png": "<correct text in the picture>" , "1.png": "<correct text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
 
 
 # Subtask 3 - Zero-shot object detection
