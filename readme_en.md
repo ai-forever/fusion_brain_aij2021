@@ -4,9 +4,15 @@ The current task suggests developing a single multitask model that would success
 
 We provide [a concept of a single model](https://colab.research.google.com/drive/1YAkxWG0dRKPtqy9CZxFPvCNCCXvMGr65?usp=sharing%22%20target%3D%22_parent%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fcolab.research.google.com%2Fassets%2Fcolab-badge.svg%22%20alt%3D%22Open%20In%20Colab) that is trained on several tasks related to different modalities (visual, audio and text). The concept is inspired by an article ["Pretrained Transformers as Universal Computations Engines"](https://arxiv.org/pdf/2103.05247.pdf) (```Lu et al., 2021```) that examines the ability of pretrained language models based on the Transformer architecture to form qualitative representations of arbitrary data sequences – thus, generalizing to other modalities with minimal finetuning. The basis of the architecture proposed in the concept is the pretrained GPT-2 language model; experiments are carried out both with a "frozen" model (Frozen Pretrained Transformer), and with a model in which all layers are trained on three modalities simultaneously.
 
-To be awarded for a single multitask model, a Participant should submit a model with **at least 30%** of shared weights — parameters which are common to all modalities. These parameters should not be purely nominal; on the contrary, they should be used in a meaningful way during the prediction of the model and have a beneficial effect on model’s quality. Otherwise, the model is considered to be unitask. The model must also surpass the minimum metric values established by the Arranger for each of the subtasks, and therefore surpass the minimum integral metric.
+In order for the model presented by the team/participant to be considered as multitask, it is necessary and sufficient to meet the following criteria:
 
-Uploading solutions to the Competition platform will become available from **01/10/2021**.
+1) shared weights should be **at least 30%** of all model parameters: *if ![image](https://latex.codecogs.com/svg.image?\color{Blue}N) is the total number of parameters of the models that solve 4 subtasks, and ![image](https://latex.codecogs.com/svg.image?\color{Blue}M) is the number of common parameters of these models (that is, they are identical both in value and architecturally), then it is necessary that ![image](https://latex.codecogs.com/svg.image?\color{Blue}M/N\geqslant&space;0.3))*
+
+2) common parameters should not be purely nominal - on the contrary, they should be used in a meaningful way during the prediction of the model and have a beneficial effect on model’s quality.
+
+If at least one of the criteria above is not met, the model is considered to solve the subtask (or subtasks) separately.
+
+Uploading solutions to the Competition platform will become available from **04/10/2021**.
 
 ## General solution format
 
@@ -132,13 +138,15 @@ Participants are given the task to recognize a handwritten text in the picture. 
 
 ## Quality metric
 
-The key metric used to evaluate the participants’ solutions shall be represented by the formula: **1 - CER**, where CER is the character error rate metric. It shall be calculated as follows:
+The key metric used to evaluate the participants’ solutions for this subtask is **String Accuracy** – the ratio of the number of completely matched transcriptions of strings to the number of all strings in the sample. It shall be calculated as follows:
 
-![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{CER}&space;=&space;\frac{\sum_{i=1}^n&space;\text{dist}_{c}(pred_i,&space;true_i)}{\sum_{i=1}^n&space;\text{len}_{c}(true_i)},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{StringAcc}&space;=&space;\frac{\sum_{i=1}^n&space;[\text{pred}_i&space;=&space;\text{true}_i]}{n})
 
-where dist<sub>c</sub> is the Levenshtein distance calculated for tokens (including spaces), while len<sub>c</sub> is the line length in characters.
+Here n is the size of the test sample, pred<sub>i</sub> is a string of characters that the model recognized on the i-th image in the sample, and true<sub>i</sub> is the correct translation of the i-th image produced by the annotator, [•] - Iverson bracket:
 
-The 1 - CER metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
+![image](https://latex.codecogs.com/svg.image?[\begin{gathered}&space;x&space;=&space;y&space;\end{gathered}]&space;=&space;\begin{cases}1,&x=y\\0,&space;&x\neq&space;y\end{cases})
+
+The String Accuracy metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
 
 ## Solution format
 
@@ -263,7 +271,7 @@ The quality will be evaluated using the **accuracy** metric. It reflects the per
 Data for prediction related to this subtask shall include:
 
 * The ```images``` folder.  It is a set of images, to which the answers refer. It contains files in the following format: ```0.jpg, 1.jpg ...```.
-* The ```questions.json``` file. It is a dictionary in the following format: ```{ "0": {"image_id": "1.jpg", "question": "Where is he looking?"} , ... }```. Keys shall be represented by sample indices, while values shall be represented by a dictionary with "image_id" (value: name of a file from the images folder) and "question" (value: text of a question for the respective image) fields. Questions may be asked in English or in Russian.
+* The ```questions.json``` file. It is a dictionary in the following format: ```{ "0": {"file_name": "1.jpg", "question": "Where is he looking?"} , ... }```. Keys shall be represented by sample indices, while values shall be represented by a dictionary with "file_name" (value: name of a file from the images folder) and "question" (value: text of a question for the respective image) fields. Questions may be asked in English or in Russian.
 
 
 The participant’s model should make predictions for all questions and generate the ```prediction_VQA.json``` file. It is a dictionary in the following format: ```{ "0": "down" , ... }```. Keys shall be represented by sample indices, while values shall be represented by answers to the respective questions predicted by the model.
