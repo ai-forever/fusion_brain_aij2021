@@ -144,7 +144,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 ![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{StringAcc}&space;=&space;\frac{\sum_{i=1}^n&space;[\text{pred}_i&space;=&space;\text{true}_i]}{n})
 
-Здесь n - размер тестовой выборки, pred<sub>i</sub> – это строка из символов, которую распознала модель на i-ом изображении в выборке, а true<sub>i<sub> - это правильный перевод i-ого изображения, произведенный аннотатором, [•] - скобка Айверсона:
+Здесь n - размер тестовой выборки, pred<sub>i</sub> – это строка из символов, которую распознала модель на i-ом изображении в выборке, а true<sub>i</sub> - это правильный перевод i-ого изображения, произведенный аннотатором, [•] - скобка Айверсона:
 
 ![image](https://latex.codecogs.com/svg.image?\color{Blue}[x = y]&space;=&space;\begin{cases} &space; 1,&space;x&space;=&space;y,\\&space;0, &space; x&space;\neq&space;y\end{cases})
 
