@@ -205,10 +205,11 @@ The rules according to which the prediction of the model belongs to one of the t
 
 * if the given class from the request is absent in the correct annotations (that is, it is a negative example), but the participant's model made a prediction for it, the prediction is considered as *FP*
 * if the given class from the request is present in the correct annotations (that is, it is a positive example):
+  * if the participant's model did not make a prediction for it, that is, passed an empty list - the prediction is considered as *FN*
   * the predicted bboxes for a given class are sorted by their probability value (in descending order) to obtain a top-k bounding boxes, where k is the number of valid bboxes for this class. Thus, if there is one bbox in the given image for a given class in the correct annotations, then we compare it with one prediction with the highest probability value
   * for each bbox of a given class from the correct annotations (a class can have multiple corresponding bboxes in the image):
     * if the intersection of the correct bbox with at least one of the predicted top-k bboxes for this class by IoU > 0.5 - the prediction is considered as *TP*
-    * if the intersection of the correct bbox with each of the predicted top-k bboxes for the given label by IoU < 0.5 - the prediction is considered as *FN*.
+    * if the intersection of the correct bbox with each of the predicted top-k bboxes for the given label by IoU < 0.5 - the prediction is considered as *FP*.
     
 IoU is a metric that evaluates the quality of the match between the predicted bbox and the reference one. It is calculated as the ratio of the intersection area to the area of the union of these two bboxes:
 
