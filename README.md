@@ -71,7 +71,7 @@
 
 CodeBLEU представляет собой взвешенную комбинацию четырех компонент:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{CodeBLEU}&space;=&space;\alpha&space;\cdot&space;\textrm{BLEU}&space;&plus;&space;\beta&space;\cdot&space;\textrm{BLEU}_{weight}&space;&plus;&space;\gamma&space;\cdot&space;\textrm{Match}_{ast}&space;&plus;&space;\delta&space;\cdot&space;\textrm{Match}_{df},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{CodeBLEU}&space;=&space;\alpha&space;\cdot&space;\textrm{BLEU}&space;&plus;&space;\beta&space;\cdot&space;\textrm{BLEU}_{weight}&space;&plus;&space;\gamma&space;\cdot&space;\textrm{Match}_{ast}&space;&plus;&space;\delta&space;\cdot&space;\textrm{Match}_{df},)
 
 где BLEU - стандартная метрика BLEU ```Papineni et al., 2002```, BLEU<sub>weight</sub> - взвешенное сопоставление n-грамм (токены различаются по важности - и совпадение определённых токенов переведенных и "золотых" функций имеет больший вес), Match<sub>ast</sub> – метрика соответствия деревьев абстрактного синтаксиса переведенного кода и эталонного, Match<sub>df</sub> отражает сходство "потоков данных" функций-гипотез и верных функций.
 
@@ -79,30 +79,30 @@ CodeBLEU представляет собой взвешенную комбина
 
 * BLEU основана на подсчете n-грамм, которые встретились и в переводе, и в референсной последовательности; рассчитывается она следующим образом:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{BLEU}&space;=&space;\textrm{BP}&space;\cdot&space;\textrm{exp}&space;(\sum_{n=1}^{N}&space;w_{n}&space;\log&space;p_{n}),)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{BLEU}&space;=&space;\textrm{BP}&space;\cdot&space;\textrm{exp}&space;(\sum_{n=1}^{N}&space;w_{n}&space;\log&space;p_{n}),)
 
 где BP - штраф за слишком короткие варианты перевода, который считается как отношение количества токенов в переводе, предложенном моделью, к количеству токенов в эталонной последовательности; вторая часть выражения – среднее геометрическое значений модифицированной точности n-грамм:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{n\text{-}gram&space;\in&space;C}&space;Count_{clip}&space;\textrm{(n-gram)}}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{n\text{-}gram\textquotesingle&space;\in&space;C\textquotesingle}&space;Count&space;\textrm{(n-gram\textquotesingle)}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{n\text{-}gram&space;\in&space;C}&space;Count_{clip}&space;\textrm{(n-gram)}}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{n\text{-}gram\textquotesingle&space;\in&space;C\textquotesingle}&space;Count&space;\textrm{(n-gram\textquotesingle)}})
 
 для n-грамм длиной от 1 до N, умноженных на соответствующие положительные веса w<sub>n</sub>, в сумме дающие 1.
 
 *  В отличие от стандартной BLEU, в формулу расчета точности совпадения n-грамм для метрики BLEU<sub>weight</sub> включается весовой коэффициент (![image](https://latex.codecogs.com/svg.image?\mu_{n}^{i})), значение которого больше для ключевых слов языка программирования, чем для других токенов:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count_{clip}&space;(C(i,&space;i&plus;n))}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count&space;(C\textquotesingle(i,&space;i&plus;n))},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count_{clip}&space;(C(i,&space;i&plus;n))}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count&space;(C\textquotesingle(i,&space;i&plus;n))},)
 
 где C(i, i+n) - n-грамм, начинающийся в позиции i и заканчивающийся в позиции i+n; Count<sub>clip</sub>, как и в случае со стандартной BLEU, - максимальное количество n-грамм, встречающихся как в переведенном коде, так и в наборе эталонных решений.
 Список ключевых слов заранее определяется для конкретного языка программирования.
 
 * Синтаксическая структура исходного кода может быть представлена в виде дерева абстрактного синтаксиса (ДАС) - переведенные и эталонные функции, таким образом, можно сравнивать на уровне поддеревьев, полученных с помощью ДАС-парсера. Поскольку нас интересует синтаксическая информация, листья ДАС, в которых находятся переменные функции, не учитываются. Match<sub>ast</sub> рассчитывается по следующей формуле:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Match}_{ast}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{T}_{cand})}{\textrm{Count}(\textrm{T}_{ref})},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Match}_{ast}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{T}_{cand})}{\textrm{Count}(\textrm{T}_{ref})},)
 
 где Count(T<sub>ref</sub>) - общее количество поддеревьев референсного кода, Count<sub>clip</sub>(T<sub>cand</sub>) - количество поддеревьев переведенного кода, совпавших с поддеревьями эталонных функций. Данная метрика позволяет оценить качество получившегося кода с точки зрения синтаксиса.  
 
 * Сравнение переведенного кода и референсного на уровне семантики происходит с использованием "потоков данных" (data flow ```Guo et al., 2020```) - представлений исходного кода в виде графа, вершины которого — переменные, а грани обозначают своего рода "генетические" отношения между вершинами (выражают информацию о том, откуда берется значение каждой переменной). Формула расчета метрики Match<sub>df</sub> имеет следующий вид:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
 
 где Count(DF<sub>ref</sub>) - общее количество "потоков данных" референсного кода, Count<sub>clip</sub>(DF<sub>cand</sub>) - количество "потоков данных" переведенного кода, совпавших с эталонными.
 
@@ -136,7 +136,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 В качестве основной метрики для оценки решений участников используется формула **1 - CER**, где CER - это метрика character error rate. Считается она следующим образом:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\text{CER}&space;=&space;\frac{\sum_{i=1}^n&space;\text{dist}_{c}(pred_i,&space;true_i)}{\sum_{i=1}^n&space;\text{len}_{c}(true_i)})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{CER}&space;=&space;\frac{\sum_{i=1}^n&space;\text{dist}_{c}(pred_i,&space;true_i)}{\sum_{i=1}^n&space;\text{len}_{c}(true_i)})
 
 Здесь dist<sub>c</sub> - это расстояние Левенштейна, посчитанное для токенов-символов (включая пробелы), len<sub>c</sub> - длина строки в символах.
 
@@ -194,13 +194,13 @@ CodeBLEU представляет собой взвешенную комбина
 
 Для оценки качества будет использоваться метрика **F1-score**:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{F1}=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{F1}=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
 
 F1-score вычисляется на основе значений Precision (точности) и Recall (полноты), которые, в свою очередь, зависят от набора статистик по прогнозам – true positive (TP, истинно-положительный результат), false positive (FP, ложно-положительный результат) и false negative (FN, ложно-отрицательный результат):
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Precision}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Precision}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}},)
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Recall}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Negative}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Recall}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Negative}})
 
 Правила, по которым прогноз модели относится к одному из типов, следующие: 
 
@@ -214,7 +214,7 @@ F1-score вычисляется на основе значений Precision (т
 
 IoU - это метрика, которая оценивает степень пересечения между двумя ограничивающими рамками. Она вычисляется как отношение площади пересечения к площади объединения этих двух bbox:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{IoU}=&space;\frac{\text{Intersection}}{\text{Union}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{IoU}=&space;\frac{\text{Intersection}}{\text{Union}})
 
 IoU для каждой пары (prediction/true) принимает значение от 0 до 1. В качестве порога отсечения по IoU используется значение 0.5, то есть все предсказанные bbox, значение IoU для которых меньше 0.5, считаются ложными прогнозами.
 
@@ -257,7 +257,7 @@ IoU для каждой пары (prediction/true) принимает значе
 
 Для оценки качества предсказания будет использоваться метрика **accuracy**. Эта метрика показывает долю точных совпадений среди пар предсказанных и истинных ответов, то есть отражает отношение числа совпавших ответов (когда модель участника предсказала такой же ответ, как истинный) к общему числу ответов. Эта метрика изменяется от 0 до 1, где 0 - наихудшее значение, 1 - наилучшее:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{accuracy}&space;=\frac{&space;\textrm{True&space;answers}}{&space;\textrm{All&space;answers}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{accuracy}&space;=\frac{&space;\textrm{True&space;answers}}{&space;\textrm{All&space;answers}})
 
 ## Формат решения
 
@@ -274,7 +274,7 @@ IoU для каждой пары (prediction/true) принимает значе
 
 Итоговая оценка multitask-модели складывается из оценок по подзадачам:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
 
 где S – итоговая оценка участника, S<sub>1</sub> – оценка по подзадаче Code2code Translation, S<sub>2</sub> – оценка по подзадаче Handwritten Text Recognition, S<sub>3</sub> – оценка по подзадаче Zero-shot Object Detection, S<sub>4</sub> – оценка по подзадаче Visual Question Answering. 
 
@@ -291,7 +291,7 @@ IoU для каждой пары (prediction/true) принимает значе
 
 Минимальное значение интегральной оценки S<sub>min</sub> рассчитывается таким образом:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{S}_{min}&space;=&space;\textrm{S}_{min}^{1}&space;&plus;&space;\textrm{S}_{min}^{2}&space;&plus;&space;\textrm{S}_{min}^{3}&space;&plus;&space;\textrm{S}_{min}^{4}&space;=&space;0.2&space;&plus;&space;0.6&space;&plus;&space;0.15&space;&plus;&space;0.35&space;=&space;1.3)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{S}_{min}&space;=&space;\textrm{S}_{min}^{1}&space;&plus;&space;\textrm{S}_{min}^{2}&space;&plus;&space;\textrm{S}_{min}^{3}&space;&plus;&space;\textrm{S}_{min}^{4}&space;=&space;0.2&space;&plus;&space;0.6&space;&plus;&space;0.15&space;&plus;&space;0.35&space;=&space;1.3)
 
 Формула расчета денежного приза имеет следующий вид:
 
@@ -299,7 +299,7 @@ IoU для каждой пары (prediction/true) принимает значе
 
 где S – итоговая оценка участника, S<sub>min</sub> = 1.3 – минимальное значение итоговой оценки, коэффициент α зависит от места в лидерборде (топ-3 решения) и вычисляется следующим образом:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;\textrm{S}_{min}},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;\textrm{S}_{min}},)
 
 где α<sub>place</sub> – коэффициент для расчета бонуса для первого, второго и третьего мест в лидерборде (α<sub>1</sub> = 2, α<sub>2</sub> = 1, α<sub>3</sub> = 0.6) при S<sub>min</sub> ≤ S < 2.3. MAX<sub>place</sub> – максимальный размер вознаграждения для топ3-решений в лидерборде при S ≥ 2.3 (MAX<sub>1</sub> = 3 млн руб., MAX<sub>2</sub> = 1.5 млн руб., MAX<sub>3</sub> = 0.8 млн руб.). FIX<sub>place</sub> – фиксированная сумма выигрыша для топ-решений в лидерборде при S<sub>min</sub> ≤ S < 2.3 (FIX<sub>1</sub> = 1 млн руб., FIX<sub>2</sub> = 0.5 млн руб., FIX<sub>3</sub> = 0.2 млн руб.).
 
