@@ -195,7 +195,7 @@ The quality will be evaluated using the **F1-score**:
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{F1}=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
 
-F1-score is calculated based on Precision and Recall, which, in turn, depend on a set of prediction statistics - true positive (TP), false positive (FP) and false negative (FN):
+The F1-score is calculated based on Precision and Recall, which, in turn, depend on a set of prediction statistics - true positive (TP), false positive (FP) and false negative (FN):
 
 ![image](https://latex.codecogs.com/svg.image?\textrm{Precision}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}},)
 
