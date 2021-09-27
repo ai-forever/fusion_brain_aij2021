@@ -70,7 +70,7 @@ To create a parallel training corpus, you can also use [CodeNet](https://github.
 
 CodeBLEU is a weighted combination of four components:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{CodeBLEU}&space;=&space;\alpha&space;\cdot&space;\textrm{BLEU}&space;&plus;&space;\beta&space;\cdot&space;\textrm{BLEU}_{weight}&space;&plus;&space;\gamma&space;\cdot&space;\textrm{Match}_{ast}&space;&plus;&space;\delta&space;\cdot&space;\textrm{Match}_{df},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{CodeBLEU}&space;=&space;\alpha&space;\cdot&space;\textrm{BLEU}&space;&plus;&space;\beta&space;\cdot&space;\textrm{BLEU}_{weight}&space;&plus;&space;\gamma&space;\cdot&space;\textrm{Match}_{ast}&space;&plus;&space;\delta&space;\cdot&space;\textrm{Match}_{df},)
 
 where BLEU is the standard BLEU metric ```Papineni et al., 2002```, BLEU<sub>weight</sub> is the weighted comparison of n-grams (with the tokens differing by their significance and the match of certain tokens for the translated and ‘golden’ functions is assigned more weight), Match<sub>ast</sub> is the comparison metric for abstract syntax trees of the translated code and of the reference code, and Match<sub>df</sub> reflects the similarity of data flows produced by hypotheses and correct functions.
 
@@ -78,29 +78,29 @@ Let us discuss each component of the metric in more detail.
 
 * BLEU is based on calculation of n-grams found in the translation and the reference sequence calculated as follows:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{BLEU}&space;=&space;\textrm{BP}&space;\cdot&space;\textrm{exp}&space;(\sum_{n=1}^{N}&space;w_{n}&space;\log&space;p_{n}),)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{BLEU}&space;=&space;\textrm{BP}&space;\cdot&space;\textrm{exp}&space;(\sum_{n=1}^{N}&space;w_{n}&space;\log&space;p_{n}),)
 
 where BP is a penalty for too short translations, which shall be calculated as the number of tokens in the model-suggested translation divided by the number of tokens in the reference sequence; and the second part of the formula is a geometric mean of a modified n-gram precision:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{n\text{-}gram&space;\in&space;C}&space;Count_{clip}&space;\textrm{(n-gram)}}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{n\text{-}gram\textquotesingle&space;\in&space;C\textquotesingle}&space;Count&space;\textrm{(n-gram\textquotesingle)}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{n\text{-}gram&space;\in&space;C}&space;Count_{clip}&space;\textrm{(n-gram)}}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{n\text{-}gram\textquotesingle&space;\in&space;C\textquotesingle}&space;Count&space;\textrm{(n-gram\textquotesingle)}})
 
 for n-grams with the length from 1 to N, multiplied by corresponding positive weights w<sub>n</sub> that in total make 1.
 
-* As opposed to the standard BLEU metric, the BLEU<sub>weight</sub> metric calculates the accuracy of n-grams coincidence by using the weight factor (![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\mu_{n}^{i})) with its value higher for keywords in a programming language than for any other tokens:
+* As opposed to the standard BLEU metric, the BLEU<sub>weight</sub> metric calculates the accuracy of n-grams coincidence by using the weight factor (![image](https://latex.codecogs.com/svg.image?\color{Blue}\mu_{n}^{i})) with its value higher for keywords in a programming language than for any other tokens:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count_{clip}&space;(C(i,&space;i&plus;n))}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count&space;(C\textquotesingle(i,&space;i&plus;n))},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{p}_{n}&space;=&space;\frac{\sum_{C&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count_{clip}&space;(C(i,&space;i&plus;n))}{\sum_{C\textquotesingle&space;\in&space;Candidates}&space;\sum_{i=1}^{l}&space;\mu_{n}^{i}&space;Count&space;(C\textquotesingle(i,&space;i&plus;n))},)
 
 where C(i, i+n) is an n-gram starting in the i place and ending in the i+n place, Count<sub>clip</sub> has the same meaning as that in the standard BLEU metric, it is the maximum number of n-grams found in both translated code and reference set. The keywords list is pre-determined for each programming language.
 
 * For a source code, its syntax structure could be expressed as an abstract syntax tree (AST), thus enabling to compare the translated and reference functions on the level of subtrees generated by an AST parser. Since we are interested in the syntax, the AST leaves containing variables could be omitted. Match<sub>ast</sub> shall be calculated according to the following formula:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Match}_{ast}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{T}_{cand})}{\textrm{Count}(\textrm{T}_{ref})},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Match}_{ast}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{T}_{cand})}{\textrm{Count}(\textrm{T}_{ref})},)
 
 where Count(T<sub>ref</sub>) is a total number of subtrees in the reference code, Count<sub>clip</sub>(T<sub>cand</sub>) is a number of subtrees in the translated code that have matched the subtrees of reference functions. This metric allows assessing the quality of a code translated in terms of its syntax.
 
 * The translated code and reference code are also compared by their semantics, using data flows (```Guo et al., 2020```) when the source code is represented as a graph with its nodes being variables and its edges representing the ‘genetic’ relations between the nodes (denoting where the value of each variable comes from). The Match<sub>df</sub> metric shall be calculated according to the following formula:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Match}_{df}&space;=&space;\frac{\textrm{Count}_{clip}(\textrm{DF}_{cand})}{\textrm{Count}(\textrm{DF}_{ref})},)
 
 where Count(DF<sub>ref</sub>) is a total number of data flows in the reference code; Count<sub>clip</sub>(DF<sub>cand</sub>) is a number of data flows in the translated code that have matched the reference code.
 
@@ -134,7 +134,7 @@ Participants are given the task to recognize a handwritten text in the picture. 
 
 The key metric used to evaluate the participants’ solutions shall be represented by the formula: **1 - CER**, where CER is the character error rate metric. It shall be calculated as follows:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\text{CER}&space;=&space;\frac{\sum_{i=1}^n&space;\text{dist}_{c}(pred_i,&space;true_i)}{\sum_{i=1}^n&space;\text{len}_{c}(true_i)},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{CER}&space;=&space;\frac{\sum_{i=1}^n&space;\text{dist}_{c}(pred_i,&space;true_i)}{\sum_{i=1}^n&space;\text{len}_{c}(true_i)},)
 
 where dist<sub>c</sub> is the Levenshtein distance calculated for tokens (including spaces), while len<sub>c</sub> is the line length in characters.
 
@@ -193,13 +193,13 @@ It is also worth using the [VisualGenome dataset](https://visualgenome.org/api/v
 
 The quality will be evaluated using the **F1-score**:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{F1}=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{F1}=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
 
 The F1-score is calculated based on Precision and Recall, which, in turn, depend on a set of prediction statistics - true positive (TP), false positive (FP) and false negative (FN):
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Precision}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Precision}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}},)
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{Recall}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Negative}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{Recall}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Negative}})
 
 The rules according to which the prediction of the model belongs to one of the types are the following:
 
@@ -213,7 +213,7 @@ The rules according to which the prediction of the model belongs to one of the t
     
 IoU is a metric that evaluates the quality of the match between the predicted bbox and the reference one. It is calculated as the ratio of the intersection area to the area of the union of these two bboxes:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{IoU}&space;=&space;\frac{&space;\textrm{Intersection}}{&space;\textrm{Union}})
 
 The IoU for each pair (prediction/true) takes a value from 0 to 1. The IoU cutoff threshold is 0.5, that is, all predicted bboxes with an IoU value less than 0.5 are considered as false predictions.
 
@@ -256,7 +256,7 @@ Questions may be whether in English or in Russian. It is supposed that the answe
 
 The quality will be evaluated using the **accuracy** metric. It reflects the percentage of correct matches for the pairs of predicted and correct answers, i.e. the percentage of matching answers (the model predicts an answer matching the true one) to the total number of answers. This metric varies from 0 to 1, where 0 is the worst value and 1, the best one:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{accuracy}&space;=\frac{&space;\textrm{True&space;answers}}{&space;\textrm{All&space;answers}})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{accuracy}&space;=\frac{&space;\textrm{True&space;answers}}{&space;\textrm{All&space;answers}})
 
 ## Solution format
 
@@ -274,7 +274,7 @@ After inference, the metric calculation script shall compare the ```prediction_
 
 The final score of multitask model shall be composed of scores for subtasks:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{S}&space;=&space;\textrm{S}_{1}&space;&plus;&space;\textrm{S}_{2}&space;&plus;&space;\textrm{S}_{3}&space;&plus;&space;\textrm{S}_{4},)
 
 where S is a final score of the participant, S<sub>1</sub> is a score for the Code2code translation subtask, S<sub>2</sub> is a score for the Zero-shot object detection subtask, S<sub>3</sub> is a score for the Handwritten Text Recognition subtask, S<sub>4</sub> is a score for the Visual Question Answering subtask.
 
@@ -292,7 +292,7 @@ The minimum values for each of the subtasks are the following:
 
 The minimum value of the integral score S<sub>min</sub> is calculated as follows:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\textrm{S}_{min}&space;=&space;\textrm{S}_{min}^{1}&space;&plus;&space;\textrm{S}_{min}^{2}&space;&plus;&space;\textrm{S}_{min}^{3}&space;&plus;&space;\textrm{S}_{min}^{4}&space;=&space;0.2&space;&plus;&space;0.6&space;&plus;&space;0.15&space;&plus;&space;0.35&space;=&space;1.3)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{S}_{min}&space;=&space;\textrm{S}_{min}^{1}&space;&plus;&space;\textrm{S}_{min}^{2}&space;&plus;&space;\textrm{S}_{min}^{3}&space;&plus;&space;\textrm{S}_{min}^{4}&space;=&space;0.2&space;&plus;&space;0.6&space;&plus;&space;0.15&space;&plus;&space;0.35&space;=&space;1.3)
 
 The prize amount shall be calculated according to the following formula:
 
@@ -300,7 +300,7 @@ The prize amount shall be calculated according to the following formula:
 
 , where S is the participant’s final score, S<sub>min</sub> is the minimum value of the final score, while the α coefficient shall depend on the place in leaderboard (Top-3 solutions) and be calculated as follows:
 
-![image](https://latex.codecogs.com/svg.image?\color{DarkBlue}\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
 
 where α<sub>place</sub> is a coefficient for calculating the bonus for the first, second and third places in the leaderboard (α_1 = 2, α_2 = 1, α_3 = 0.6) for cases, where S<sub>min</sub> ≤ S < 2.3. MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIX<sub>place</sub> is a fixed prize for top solutions in the leaderboard with S<sub>min</sub> ≤ S < 2.3 (FIX<sub>1</sub> = RUB 1 million, FIX<sub>2</sub> = RUB 0.5 million, FIX<sub>3</sub> = RUB 0.2 million).
     
