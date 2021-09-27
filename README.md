@@ -146,7 +146,7 @@ CodeBLEU представляет собой взвешенную комбина
 
 Здесь n - размер тестовой выборки, pred<sub>i</sub> – это строка из символов, которую распознала модель на i-ом изображении в выборке, а true<sub>i</sub> - это правильный перевод i-ого изображения, произведенный аннотатором, [•] - скобка Айверсона:
 
-![image](https://latex.codecogs.com/svg.image?\color{Blue}[x = y]&space;=&space;\begin{cases}&space;1,&space;x&space;=&space;y,\\&space;0,&space;x&space;\neq&space;y\end{cases})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}[\begin{gathered}&space;x&space;=&space;y&space;\end{gathered}]&space;=&space;\begin{cases}1,&x=y\\0,&space;&x\neq&space;y\end{cases})
 
 Метрика String Accuracy изменяется от 0 до 1, где 0 – наихудшее значение, 1 - наилучшее.
 
