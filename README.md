@@ -146,9 +146,9 @@ CodeBLEU представляет собой взвешенную комбина
 
 Здесь ![image](https://latex.codecogs.com/svg.image?\color{Blue}n) - размер тестовой выборки, ![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{pred}_i) - это строка из символов, которую распознала модель на ![image](https://latex.codecogs.com/svg.image?\color{Blue}i)-ом изображении в выборке, а ![image](https://latex.codecogs.com/svg.image?\color{Blue}\text{true}_i) - это правильный перевод ![image](https://latex.codecogs.com/svg.image?\color{Blue}i)-ого изображения, произведенный аннотатором, ![image](https://latex.codecogs.com/svg.image?\color{Blue}[\cdot]) - скобка Айверсона:
 
-![image](https://latex.codecogs.com/svg.image?\color{Blue}[x = y]&space;=&space;\begin{cases} &space; 1,&space;x&space;=&space;y,\\&space;0, &space; x&space;\neq&space;y\end{cases})
+![image](https://latex.codecogs.com/svg.image?\color{Blue}[x = y]&space;=&space;\begin{cases}&space;1,&space;x&space;=&space;y,\\&space;0,&space;x&space;\neq&space;y\end{cases})
 
-Метрика **String Accuracy** изменяется от 0 до 1, где 0 – наихудшее значение, 1 - наилучшее.
+Метрика String Accuracy изменяется от 0 до 1, где 0 – наихудшее значение, 1 - наилучшее.
 
 ## Формат решения
 
