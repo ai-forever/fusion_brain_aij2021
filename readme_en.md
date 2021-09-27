@@ -138,7 +138,7 @@ The key metric used to evaluate the participants’ solutions shall be represent
 
 where dist<sub>c</sub> is the Levenshtein distance calculated for tokens (including spaces), while len<sub>c</sub> is the line length in characters.
 
-The **1 - CER** metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
+The 1 - CER metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
 
 ## Solution format
 
@@ -216,7 +216,7 @@ IoU is a metric that evaluates the quality of the match between the predicted bb
 
 The IoU for each pair (prediction/true) takes a value from 0 to 1. The IoU cutoff threshold is 0.5, that is, all predicted bboxes with an IoU value less than 0.5 are considered as false predictions.
 
-The **F1-score** metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
+The F1-score metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
 
 ## Solution format
 
