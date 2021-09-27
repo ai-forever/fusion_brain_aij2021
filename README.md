@@ -194,13 +194,13 @@ CodeBLEU представляет собой взвешенную комбина
 
 Для оценки качества будет использоваться метрика **F1-score**:
 
-![image](https://latex.codecogs.com/svg.image?F1=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
+![image](https://latex.codecogs.com/svg.image?\textrm{F1}=&space;2&space;\cdot&space;\frac{\text{Recall}\cdot\text{Precision}}{\text{Recall}&space;&plus;&space;\text{Precision}})
 
 F1-score вычисляется на основе Precision (точности) и Recall (полноты), которые, в свою очередь, зависят от набора статистик по прогнозам – true positive (TP, истинно-положительный результат), false positive (FP, ложно-положительный результат) и false negative (FN, ложно-отрицательный результат):
 
-![image](https://latex.codecogs.com/svg.image?Recall=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Negative}},)
+![image](https://latex.codecogs.com/svg.image?\textrm{Precision}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}},)
 
-![image](https://latex.codecogs.com/svg.image?Precision=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Positive}})
+![image](https://latex.codecogs.com/svg.image?\textrm{Recall}=&space;\frac{\text{True\&space;Positive}}{\text{True\&space;Positive}&space;&plus;&space;\text{False\&space;Negative}})
 
 Правила, по которым прогноз относится к каждому из типов, следующие: 
 
