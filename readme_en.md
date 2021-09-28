@@ -144,7 +144,7 @@ The key metric used to evaluate the participants’ solutions for this subtask i
 
 Here n is the size of the test sample, pred<sub>i</sub> is a string of characters that the model recognized on the i-th image in the sample, and true<sub>i</sub> is the correct translation of the i-th image produced by the annotator, [•] - Iverson bracket:
 
-![image](https://latex.codecogs.com/svg.image?[\begin{gathered}&space;x&space;=&space;y&space;\end{gathered}]&space;=&space;\begin{cases}1,&x=y\\0,&space;&x\neq&space;y\end{cases})
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/Iverson.png)
 
 The String Accuracy metric varies from 0 to 1, where 0 is the worst value and 1 is the best one.
 
