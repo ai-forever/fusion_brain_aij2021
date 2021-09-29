@@ -21,17 +21,17 @@ Participants should create a zip archive with a trained model and a set of scrip
 The archive root must contain the metadata.json file containing the following:
 ```
 {
-    "image": "sberbank/fb-python",
-    "entry_point": "python run.py $PATH_INPUT $PATH_OUTPUT"
+    "image": "cr.msk.sbercloud.ru/aicloud-base-images/horovod-cuda10.1-tf2.3.0:latest",
+    "entry_point": "python /home/jovyan/run.py"
 }
 ```
-Where ```image``` is a field with the docker image name, in which the solution will be run, ```entry_point``` is a command that runs the solution. For solution, the archive root will be the current directory. During the run, the ```DATASETS_PATH``` environment variable shall contain the route to relevant open datasets accessible from the container with the solution.
+Where ```image``` is a field with the docker image name, in which the solution will be run, ```entry_point``` is a command that runs the inference script. For solution, `/home/jovyan` will be the current directory. 
 
-An argument accepted by the script for model inference should be represented by a path to the folder with the content to be used for prediction. Let us assume that the argument shall be represented by the ```fusion_brain``` folder. Names of ```fusion_brain``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (C2C, HTR, zsOD, VQA) shall have the content needed for predictions.
+The `input` folder is placed in the container. Names of ```input``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (C2C, HTR, zsOD, VQA) shall have the content needed for predictions.
 
 The data structure is as follows:
 
-* fusion_brain
+* input
   * C2C 
     * requests.json
   * HTR
@@ -43,15 +43,23 @@ The data structure is as follows:
     * images
     * questions.json
 
-The single model should generate predictions for each subtask in the ```prediction_{TASK_NAME}.json``` format, i.e. there should be four files after the model inference: ```prediction_C2C.json, prediction_HTR.json, prediction_zsOD.json, prediction_VQA.json```. These files should be located in the root of uploaded file with the solution.
+The single model should generate predictions for each subtask in the ```prediction_{TASK_NAME}.json``` format, i.e. there should be four files after the model inference: ```prediction_C2C.json, prediction_HTR.json, prediction_zsOD.json, prediction_VQA.json```. These files should be located in the `output` folder (absolute path: `/home/jovyan/output`).
+
+The structure of the model prediction directory should be as follows:
+
+* output
+  * prediction_C2C.json
+  * prediction_HTR.json
+  * prediction_zsOD.json
+  * prediction_VQA.json
 
 After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be added to the container and a script for calculation of metrics for each subtask shall be run. The final metric shall be calculated as a sum of metrics for each subtask (see below).
 
-# Subtask 1 - Code2code translation
+# Subtask 1 - Code2code Translation
 
 ## Description
 
-A task of translation from one programming language into another is a standard part of the wide-ranging repertoire of ML4Code. As of today, there are several alternate solutions – in line with both supervised learning, where a training dataset is represented by a parallel corpus (baseline model of the CodeXGLUE benchmark with CodeBERT as encoder in the encoder-decoder architecture, ```Lu et al., 2021```), and unsupervised one, including pretraining of cross-lingual language model on monolingual corpora (TransCoder, ```Lachaux et al., 2020```). 
+A task of translation from one programming language into another is a standard part of the wide-ranging repertoire of ML4Code. As of today, there are several alternate solutions – in line with both supervised learning, where a training dataset is represented by a parallel corpus (baseline model of the [CodeXGLUE](https://arxiv.org/pdf/2102.04664.pdf) benchmark with CodeBERT as encoder in the encoder-decoder architecture, ```Lu et al., 2021```), and unsupervised one, including pretraining of cross-lingual language model on monolingual corpora ([TransCoder](https://arxiv.org/pdf/2006.03511.pdf), ```Lachaux et al., 2020```). 
 
 Cases where a source language and a target language have different type systems are particularly problematic. It is that very class that our subtask belongs to: we should translate from a statically-typed language (Java) to a dynamically-typed one (Python). The input is a Java function and the output should be the similar function in Python.
 
@@ -64,7 +72,7 @@ The file have the jsonl format with "java" and "python" fields:
 {"java":"import java . util . Scanner ; \u00a0 public class A1437 { \u00a0 public static void main ( String [ ] args ) { Scanner in = new Scanner ( System . in ) ; int T = in . nextInt ( ) ; for ( int t = 0 ; t < T ; t ++ ) { int L = in . nextInt ( ) ; int R = in . nextInt ( ) ; boolean possible = R < 2 * L ; System . out . println ( possible ? \" YES \" : \" NO \" ) ; } } \u00a0 }\n","python":"t = int ( input ( ) ) NEW_LINE ans = [ ] NEW_LINE for i in range ( t ) : l , r = [ int ( x ) for x in input ( ) . split ( ) ] NEW_LINE if ( 2 * l ) > r : NEW_LINE INDENT ans . append ( \" YES \" ) else : NEW_LINE ans . append ( \" NO \" ) NEW_LINE DEDENT for j in ans : print ( j ) NEW_LINE\n"}
 ```
 
-To create a parallel training corpus, you can also use [CodeNet](https://github.com/IBM/Project_CodeNet), which contains solutions in 4 languages (C++, C, Python and Java) to 4,000 programming problems, extracted from two online judge web sites: AtCoder (the AVATAR dataset also includes solutions from this resource for some tasks) and AIZU Online Judge. For the convenience of participants, we provide an [archive](https://dsworks.s3pd01.sbercloud.ru/aij2021/%D0%A12%D0%A1_translation/CodeNet_accepted_java_python.tar.gz) containing solutions from CodeNet written in Java and Python, broken down by problems. However, it should be taken into account that the solutions of one programming problem in different languages are, at least, type IV clones (preserving source code semantics, but having considerable differences in syntax), but they are not guaranteed to be identical to each other, adjusted for peculiarities of languages (literal translation).
+To create a parallel training corpus, you can also use [CodeNet](https://github.com/IBM/Project_CodeNet), which contains solutions in 4 languages (C++, C, Python and Java) to 4,000 programming problems, extracted from two online judge web sites: AtCoder (the AVATAR dataset also includes solutions from this resource for some tasks) and AIZU Online Judge. For the convenience of participants, we provide an [archive](https://dsworks.s3pd01.sbercloud.ru/aij2021/%D0%A12%D0%A1_translation/CodeNet_accepted_java_python.tar.gz) (the full data is in the repository https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/) containing solutions from CodeNet written in Java and Python, broken down by problems. However, it should be taken into account that the solutions of one programming problem in different languages are, at least, type IV clones (preserving source code semantics, but having considerable differences in syntax), but they are not guaranteed to be identical to each other, adjusted for peculiarities of languages (literal translation).
 
 **Test public.** The public leaderboard shall be generated according to the results of model prediction check based on a test set (1,693) from the AVATAR dataset.
 
@@ -130,11 +138,11 @@ Participants are given the task to recognize a handwritten text in the picture. 
 
 ## Data
 
-**Train.** We provide a training [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of two different datasets. The first one is a manually collected dataset of school copybooks. Images in this dataset are represented by individual words in a text written with the Cyrillic characters on a copybook page. The second part consists of a popular dataset called IAM. It is a set of handwritten words in English.
+**Train.** We provide a training [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of a manually gathered and processed collection of school copybooks. Images in this dataset are represented by individual words in a text written with the Cyrillic characters on a copybook page. As for the handwritten words in English, we recommend to use a popular dataset called [IAM](https://fki.tic.heia-fr.ch/databases/iam-handwriting-database).
 
-**Test public.** The public leaderboard shall also be calculated with regard to copybook datasets and IAM.
+**Test public.** The public leaderboard shall be calculated with regard to the copybook dataset containing texts in Russian and English.
 
-**Test private.** The private test dataset is hidden from participants. It is also a dataset for text recognition in a format similar to training dataset. However, we do not provide any information on dataset details.
+**Test private.** The private test dataset is hidden from participants. It is also a dataset for text recognition in a format similar to training dataset.
 
 ## Quality metric
 
@@ -161,7 +169,7 @@ After inference, the metric calculation script shall compare the ```prediction_
 The ```true_HTR.json``` file shall have the following format:  ```{"0.png": "<correct text in the picture>" , "1.png": "<correct text in the picture>" , ... }```. Keys shall be represented by respective names of files from the images folder, while values shall be represented by the correct translation of a line in the respective image.
 
 
-# Subtask 3 - Zero-shot object detection
+# Subtask 3 - Zero-shot Object Detection
 
 ## Description
 
@@ -186,10 +194,7 @@ At the prediction stage, the model input shall contain two entities: an image an
 
 ## Data
 
-**Train.** It is suggested that training should be based on a popular dataset called MS-COCO:
-
-[Images](http://images.cocodataset.org/zips/train2017.zip)    
-[Annotations](http://images.cocodataset.org/annotations/annotations_trainval2017.zip)
+**Train.** It is suggested that training should be based on a popular dataset called [MS-COCO](https://cocodataset.org/#download), which contains images (*2017 Train images* file) and their corresponding annotations (*2017 Train/Val annotations* file).
 
 It is also worth using the [VisualGenome dataset](https://visualgenome.org/api/v0/api_home.html), except for the [images](https://dsworks.s3pd01.sbercloud.ru/aij2021/zsOD/images_ids_Visual_Genome_to_exclude.json) included in the public test dataset (so that the results of the public leaderboard are indicative for the participants).
 
@@ -214,10 +219,9 @@ The rules according to which the prediction of the model belongs to one of the t
 * if the given class from the request is absent in the correct annotations (that is, it is a negative example), but the participant's model made a prediction for it, the prediction is considered as *FP*
 * if the given class from the request is present in the correct annotations (that is, it is a positive example):
   * if the participant's model did not make a prediction for it, that is, passed an empty list - the prediction is considered as *FN*
-  * the predicted bboxes for a given class are sorted by their probability value (in descending order) to obtain a top-k bounding boxes, where k is the number of valid bboxes for this class. Thus, if there is one bbox in the given image for a given class in the correct annotations, then we compare it with one prediction with the highest probability value
-  * for each bbox of a given class from the correct annotations (a class can have multiple corresponding bboxes in the image):
-    * if the intersection of the correct bbox with at least one of the predicted top-k bboxes for this class by IoU > 0.5 - the prediction is considered as *TP*
-    * if the intersection of the correct bbox with each of the predicted top-k bboxes for the given label by IoU < 0.5 - the prediction is considered as *FP*.
+  * for each bbox of a given class from the prediction (a class can have multiple corresponding bboxes in the image):
+    * if the intersection of the predicted bbox with at least one of the correct bboxes for this class by IoU > 0.5 - the prediction is considered as *TP*
+    * if the intersection of the predicted bbox with each of the correct bboxes for the given label by IoU < 0.5 - the prediction is considered as *FP*.
     
 IoU is a metric that evaluates the quality of the match between the predicted bbox and the reference one. It is calculated as the ratio of the intersection area to the area of the union of these two bboxes:
 
