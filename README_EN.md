@@ -55,6 +55,18 @@ The structure of the model prediction directory should be as follows:
 
 After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be added to the container and a script for calculation of metrics for each subtask shall be run. The final metric shall be calculated as a sum of metrics for each subtask (see below).
 
+## Limitations
+
+The solution container will be run under the following conditions:
+
+* 100 GB RAM
+* 3 vCPU
+* 1 GPU Tesla V100
+* Time for performance: 30m
+* Offline solution
+
+We provide participants with the ability to access the computational resources of Christophari to train the model. The number of resources is limited. To gain access, you should send an application to `Christofari_AIJContest_2021@sberbank.ru` with a description of how exactly it is planned to use computational resources.
+
 # Subtask 1 - Code2code Translation
 
 ## Description
