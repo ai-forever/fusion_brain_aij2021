@@ -63,7 +63,7 @@ The solution container will be run under the following conditions:
 
 * 100 GB RAM
 * 3 vCPU
-* 1 GPU Tesla V100
+* 1 GPU Tesla V100 (32 GB)
 * Time for performance: 30m
 * Offline solution
 
