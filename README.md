@@ -65,7 +65,7 @@ The English version of the document can be found [here](https://github.com/sberb
 Контейнер с решением запускается в следующих условиях:
 * 100 Гб оперативной памяти
 * 3 vCPU
-* 1 GPU Tesla V100
+* 1 GPU Tesla V100 (32 Гб)
 * время на выполнение решения: 30 минут
 * решение не имеет доступа к ресурсам интернета
 
