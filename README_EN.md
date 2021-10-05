@@ -14,7 +14,7 @@ In order for the model presented by the team/participant to be considered as mul
 
 If at least one of the criteria above is not met, the model is considered to solve the subtask (or subtasks) separately.
 
-Uploading solutions to the Competition platform will become available from **04/10/2021**.
+Uploading solutions to the Competition platform will become available from **07/10/2021**.
 
 ## General solution format
 
@@ -88,7 +88,7 @@ The file have the jsonl format with "java" and "python" fields:
 
 To create a parallel training corpus, you can also use [CodeNet](https://github.com/IBM/Project_CodeNet), which contains solutions in 4 languages (C++, C, Python and Java) to 4,000 programming problems, extracted from two online judge web sites: AtCoder (the AVATAR dataset also includes solutions from this resource for some tasks) and AIZU Online Judge. For the convenience of participants, we provide an [archive](https://dsworks.s3pd01.sbercloud.ru/aij2021/%D0%A12%D0%A1_translation/CodeNet_accepted_java_python.tar.gz) (the full data is in the repository https://developer.ibm.com/technologies/artificial-intelligence/data/project-codenet/) containing solutions from CodeNet written in Java and Python, broken down by problems. However, it should be taken into account that the solutions of one programming problem in different languages are, at least, type IV clones (preserving source code semantics, but having considerable differences in syntax), but they are not guaranteed to be identical to each other, adjusted for peculiarities of languages (literal translation).
 
-**Test public.** The public leaderboard shall be generated according to the results of model prediction check based on a test set (1,693 samples) from the AVATAR dataset.
+**Test public.** The public leaderboard shall be generated according to the results of model prediction check based on a test set (1,699 samples) from the AVATAR dataset.
 
 **Test private.** The private test dataset is hidden from participants. Its format is similar to the public test set.
 
@@ -154,7 +154,7 @@ Participants are given the task to recognize a handwritten text in the picture. 
 
 **Train.** We provide a training [dataset](https://dsworks.s3pd01.sbercloud.ru/aij2021/htr/train.zip) consisting of a manually gathered and processed collection of school copybooks. Images in this dataset are represented by individual words in a text written with the Cyrillic characters on a copybook page. As for the handwritten words in English, we recommend to use a popular dataset called [IAM](https://fki.tic.heia-fr.ch/databases/iam-handwriting-database).
 
-**Test public.** The public leaderboard shall be calculated with regard to the copybook dataset containing texts in Russian and English (14,900 samples).
+**Test public.** The public leaderboard shall be calculated with regard to the copybook dataset containing texts in Russian and English (14,973 samples).
 
 **Test private.** The private test dataset is hidden from participants. It is also a dataset for text recognition in a format similar to training dataset.
 
