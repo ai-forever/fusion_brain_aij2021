@@ -59,7 +59,7 @@ After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be 
 
 ## Limitations
 
-A Participant or a Team of Participants can submit a maximum of 5 submissions per day. Only valid attempts that have received a numerical estimate are taken into account.
+A Participant or a Team of Participants can submit a maximum of 1 (one) submission per day. Only valid attempts that have received a numerical estimate are taken into account.
 
 The solution container will be run under the following conditions:
 
