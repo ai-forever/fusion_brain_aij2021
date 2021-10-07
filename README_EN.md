@@ -59,6 +59,8 @@ After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be 
 
 ## Limitations
 
+A Participant or a Team of Participants can submit a maximum of 5 submissions per day. Only valid attempts that have received a numerical estimate are taken into account.
+
 The solution container will be run under the following conditions:
 
 * 100 GB RAM
@@ -66,6 +68,8 @@ The solution container will be run under the following conditions:
 * 1 GPU Tesla V100 (32 GB)
 * Time for performance: 30m
 * Offline solution
+* Maximum size of your solution archive compressed and decompressed: 10 GB
+* Maximum size of the Docker image used: 15 GB.
 
 We provide participants with the ability to access the computational resources of Christophari to train the model. The number of resources is limited. To gain access, you should send an application to `Christofari_AIJContest_2021@sberbank.ru` with a description of how exactly it is planned to use computational resources.
 
