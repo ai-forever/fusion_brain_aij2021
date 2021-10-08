@@ -1,0 +1,1 @@
+python evaluate.py --ref_path true_zsOD.json --pred_path prediction_zsOD.json
