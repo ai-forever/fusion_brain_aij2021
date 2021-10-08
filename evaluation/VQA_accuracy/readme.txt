@@ -1,0 +1,1 @@
+python evaluate.py --ref_path true_VQA.json --pred_path prediction_VQA.json
