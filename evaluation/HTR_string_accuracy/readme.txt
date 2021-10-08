@@ -1,0 +1,1 @@
+python evaluate.py --ref_path true_HTR.json --pred_path prediction_HTR.json
