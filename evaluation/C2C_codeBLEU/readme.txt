@@ -1,0 +1,1 @@
+python evaluate.py --ref_path true_C2C.json --pred_path prediction_C2C.json --verbose
