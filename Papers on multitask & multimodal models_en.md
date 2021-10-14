@@ -8,18 +8,22 @@ predictions on each task with shared decoder over the encoded input representati
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/unit.png)
 At each iteration during training, authors randomly select a task and a dataset to fill a batch of samples;  for each task prior, specify a sampling probability.
 
-2. [Attention Bottlenecks for Multimodal Fusion](https://arxiv.org/abs/2107.00135) (Multimodal Bottleneck Transformer (MBT), `Nagrani, Arsha et al., 2021`) - an original approach to deal with multi-modal inputs (video and audio, mostly) with middle-level fusion of it. Almost all the layers modalities are processed separately by a transformer, and only near the top (2 - 4 layers) the fusion is done: 
+2. [Attention Bottlenecks for Multimodal Fusion](https://arxiv.org/abs/2107.00135) (Multimodal Bottleneck Transformer (MBT), `Nagrani, Arsha et al., 2021`) - an original approach to deal with multi-modal inputs (video and audio, mostly) with middle-level fusion of it. 
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/mid_fuse.png) 
+Almost all the layers modalities are processed separately by a transformer, and only near the top (2 - 4 layers) the fusion is done: 
     - StepA: neurons modality_1 are concatenated with a small number B of so called multimodal bottlenecks (authors used B = 4) and then the whole self-attention processing (modality_1 + multimodal bottlenecks) is done, and then
     - StepB: neurons of modality_2 are concatenated with these B multimodal bottlenecks (corresponding output of StepA) and then the whole self-attention processing (modality_2 + multimodal bottlenecks) is done.
-
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/mbt.png)
 Main interesting part here is to share multi-modal information through a very tight information bottleneck at the same time without adding computational complexity.  
 For transformer authors used ViT-B architecture. 
 
 3. [Perceiver: General Perception with Iterative Attention](https://arxiv.org/abs/2103.03206) and [Perceiver IO: A General Architecture for Structured Inputs & Outputs](https://arxiv.org/abs/2107.14795) (`Jaegle, Andrew et al., 2021`) - the novel method of dealing with attentions for multi-modal data with linear complexity on either input size or output size. Two core ideas:
     - Iterative attention, where the same input can be fed into different depth - like RNN procedure (authors claims that this idea lies in how human brain works) - where the parameters of transformers can be shared, and
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/perceiver.png)
     - Cross-attention, where either query is latent flow and key-values are input data (for feeding data into the model), or query is the output structure (e.g., the list of positions of pixels and task_id)
-
-Important note here is how to feed the information (either input or output). Authors propose different schemes of positional encoding (includig Fourier Features), or even the learned encoding (so there is no need in explicit tokenization).  
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/perceiverIO.png)
+Important note here is how to feed the information (either input or output). Authors propose different schemes of positional encoding (includig Fourier Features), or even the learned encoding (so there is no need in explicit tokenization). 
+![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/perceiverIO_emb.png)
 Latent transformer architecture is GPT-2. 
 
 4. [Multi-Task Deep Neural Network](https://github.com/namisan/mt-dnn) (MT-DNN, ```Liu, He et al., 2019```) –  a single model was created to address multiple natural language understanding (NLU) tasks. The the lower layers are shared across
