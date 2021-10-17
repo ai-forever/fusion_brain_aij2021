@@ -7,7 +7,7 @@ DATASETS_ID = {
     'handwritten': '1ptSVo4VEE-ed8-8NMg-DOhhBc9uGlFgK',
     'detection': '',
     'vqa': '',
-    'c2c': '',
+    'c2c': '1YnrXdckRIiykCkz61cnW_b1x4angrbJl',
     'saved_models': '1Zd8isAp0lqgU95Xtn01R9df251NmY46X',
 }
 
