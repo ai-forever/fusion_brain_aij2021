@@ -30,13 +30,13 @@ Main interesting part here is to share multi-modal information through a very ti
 For transformer authors used ViT-B architecture. 
 
 3. [Perceiver: General Perception with Iterative Attention](https://arxiv.org/abs/2103.03206) and [Perceiver IO: A General Architecture for Structured Inputs & Outputs](https://arxiv.org/abs/2107.14795) (`Jaegle, Andrew et al., 2021`) - the novel method of dealing with attentions for multi-modal data with linear complexity on either input size or output size. Two core ideas:
-    - Iterative attention, where the same input can be fed into different depth - like RNN procedure (authors claims that this idea lies in how human brain works) - where the parameters of transformers can be shared, and
+- Iterative attention, where the same input can be fed into different depth - like RNN procedure (authors claims that this idea lies in how human brain works) - where the parameters of transformers can be shared, and
 
 <p align="center">
   <img src="https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/perceiver.png" width="60%">
 </p>
 
-    - Cross-attention, where either query is latent flow and key-values are input data (for feeding data into the model), or query is the output structure (e.g., the list of positions of pixels and task<sub>id</sub>)
+- Cross-attention, where either query is latent flow and key-values are input data (for feeding data into the model), or query is the output structure (e.g., the list of positions of pixels and task<sub>id</sub>)
 
 <p align="center">
   <img src="https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/perceiverIO.png" width="60%">
