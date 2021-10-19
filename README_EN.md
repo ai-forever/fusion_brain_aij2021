@@ -24,7 +24,7 @@ The archive root must contain the metadata.json file containing the following:
 ```
 {
     "image": "cr.msk.sbercloud.ru/aicloud-base-images/horovod-cuda10.1-tf2.3.0:latest",
-    "entry_point": "python /home/jovyan/run.py"
+    "entrypoint": "python /home/jovyan/run.py"
 }
 ```
 Where ```image``` is a field with the docker image name, in which the solution will be run, ```entry_point``` is a command that runs the inference script. For solution, `/home/jovyan` will be the current directory. 
