@@ -37,7 +37,7 @@ The English version of the document can be found [here](https://github.com/sberb
 
 Для запуска решений можно использовать существующее окружение:
 
-* ```cr.msk.sbercloud.ru/aijcontest2021/fusion:0.0.1``` - [Dockerfile и requirements](https://drive.google.com/file/d/1uxzzGyk37Es0_b6GHjXtFjdhflSoML04/view?usp=sharing) для данного image.
+* ```cr.msk.sbercloud.ru/aijcontest2021/fusion:0.0.1``` - [Dockerfile и requirements](https://drive.google.com/file/d/1JGv-khEGv8tFD6wAiLJIP6qocd0CUZIJ/view?usp=sharing) для данного image.
 
 При необходимости, вы можете подготовить свой образ, добавить в него необходимое ПО и библиотеки (см. [инструкцию по созданию docker-образов](https://github.com/sberbank-ai/no_fire_with_ai_aij2021/blob/main/sbercloud_instruction.md)); для использования его необходимо будет опубликовать на ```sbercloud```. Кастомные образы должны быть наследованы от базовых образов ```sbercloud``` (см. [базовые образы](https://docs.sbercloud.ru/aicloud/mlspace/concepts/environments__basic-images-for-training.html)). При создании кастомного образа необходимо присвоить ему индивидуальное название и тэг (например ```my_custom_fusionchallenge:0.0.5```).
 
