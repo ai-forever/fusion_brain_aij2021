@@ -18,18 +18,31 @@ Uploading solutions to the Competition platform will become available from **07/
 
 ## General solution format
 
-Participants should create a zip archive with a trained model and a set of scripts for model prediction. The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container. Solutions may be run with the use of any image available for downloading from DockerHub. If necessary, you can prepare your own image, add necessary software and libraries to it (see the manual on creating Docker images); to use it, you will need to publish it on DockerHub.
+### Container content
+
+Participants should create a zip archive with a trained model and a set of scripts for model prediction. The solutions are run in an isolated environment using Docker. Time and resources during testing are limited. The participant does not need to dive into Docker technology.
+
+The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container. Solutions may be run with the use of any image available for downloading from DockerHub. If necessary, you can prepare your own image, add necessary software and libraries to it (see the manual on creating Docker images); to use it, you will need to publish it on DockerHub.
 
 The archive root must contain the metadata.json file containing the following:
 ```
 {
-    "image": "cr.msk.sbercloud.ru/aicloud-base-images/horovod-cuda10.1-tf2.3.0:latest",
+    "image": "cr.msk.sbercloud.ru/aijcontest2021/fusion:0.0.1",
     "entrypoint": "python /home/jovyan/run.py"
 }
 ```
-Where ```image``` is a field with the docker image name, in which the solution will be run, ```entry_point``` is a command that runs the inference script. For solution, `/home/jovyan` will be the current directory. 
+
+Where ```image``` is a field with the docker image name, in which the solution will be run, ```entrypoint``` is a command that runs the inference script. For solution, `/home/jovyan` will be the current directory. 
+
+To run solutions, you can use the following environment:
+
+* ```cr.msk.sbercloud.ru/aijcontest2021/fusion:0.0.1``` - [Dockerfile и requirements](https://drive.google.com/file/d/1JGv-khEGv8tFD6wAiLJIP6qocd0CUZIJ/view?usp=sharing) for this image.
+
+If necessary, you can create your custom image by adding the necessary software and libraries to it ([instructions for creating docker images](https://github.com/sberbank-ai/no_fire_with_ai_aij2021/blob/main/sbercloud_instruction.md)); to use it you need to publish it on ```sbercloud```. Custom images must be inherited from base images ```sbercloud``` ([base images](https://docs.sbercloud.ru/aicloud/mlspace/concepts/environments__basic-images-for-training.html)). When creating a custom image, you must assign it an individual name and tag (for example ```my_custom_fusionchallenge: 0.0.5```).
 
 The `input` folder is placed in the container. Names of ```input``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (C2C, HTR, zsOD, VQA) shall have the content needed for predictions.
+
+### Data Structure
 
 The data structure is as follows:
 
@@ -56,6 +69,25 @@ The structure of the model prediction directory should be as follows:
   * prediction_VQA.json
 
 After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be added to the container and a script for calculation of metrics for each subtask shall be run. The final metric shall be calculated as a sum of metrics for each subtask (see below).
+
+### Sample submission
+
+This [link](https://drive.google.com/uc?export=download&id=1nxDL9NvgSyC_-LAIVgqnKMJzIOQ-UH5m) is for the `baseline_submission.zip` archive, which contains sample submission, model inputs and correct answers. The archive consists of the following files:
+
+* `input` - samples of input data for each of the tasks. This folder should not be included to the archive with the solution uploaded to the platform, it is placed by the system in the container with participant solution;
+* `output` - samples of model predictions for files from a folder `input`. These are random predictions and only show the correct format that is expected from the participant model. This folder should not be included to the archive with the solution uploaded to the platform: it is created during the launch of the model in the container;
+* `true` - samples of files with correct answers for each problem, the predictions from `output` are compared with them during the calculation of the metrics. This folder should not be included to the archive with the solution uploaded to the platform.
+
+The following files in the archive are required to generate model predictions:
+
+ * `metadata.json` - required file for every solution; it must contain the paths to the image and the model inference script
+ * `run.py` - main model inference script
+ * `last.pt` - model weights that are loaded during the execution of the `run.py` script
+ * `utils` - folder with auxiliary scripts for `run.py`. In the case of a baseline, it contains two files:
+     * `dataset.py` - code for DatasetRetriever class and the fb_collate_fn function
+     * `fb_model.py` - code for creating the model class
+ * `gpt_init` - folder with necessary files for initialization `GPT2Tokenizer` and `GPT2Model`
+ * `fb_utils` - additional set of scripts; repeats, with some exceptions, the same folder from `fb_baseline` in this repository.
 
 ## Limitations
 
