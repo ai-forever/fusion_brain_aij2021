@@ -1,4 +1,4 @@
-# Articles on multi-tasking and multimodal models
+# Papers on multi-tasking and multimodal models
 
 The development of multitasking and multimodal models is now an active field of research that saves computational resources and training time. It is certainly possible, lead to the creation of strong artificial intelligence. 
 
@@ -99,8 +99,18 @@ Multitask training is employed in the pre-training stage to optimize all pre-tra
 </p>
 
 The authors conduct experiments on benchmarks GLUE and SuperGLUE (NLP and NLU tasks), using the base T5 model with HyperGrid layers. Results show a single model with performance (Avg 85.0 on GLUE and 73.6 on SuperGLUE), not far below the quality finetuned T5 model (Avg 85.7 on GLUE and 74.8 on SuperGLUE), while being 16 times more parameter efficient. 
- 
-9. [Conditionally Adaptive Multi-Task Learning: Improving Transfer Learning in NLP Using Fewer Parameters & Less Data](https://arxiv.org/abs/2009.09139) (CA-MTL, `Pilaut et al., 2020`) - the authors of this paper propose a novel Multi-Task architecture based on Adapters that facilitate efficient parameter sharing and improves performance on GLUE and SuperGLUE compared to other Adapter architectures. The proposed architecture consists of trainable Task Embedding and Conditional Alignment layers and also half of the original Transformer layers is fine-tuned with Adapter (consisted of Conditional Attention, Conditional Layer Normalization and Bottleneck layer). Altogether this allows to fine-tune simultaneously on several datasets (without training each adapter separately), while sharing most of the parameters.
+
+9. [AdapterHub: A Framework for Adapting Transformers](https://arxiv.org/pdf/2007.07779v1.pdf) (`Pfeiffer et al., 2020`) – the article describes a new approach to fine-tuning foundation models: instead of fully training heavy-weight models, it is proposed to use Adapters— small learned bottleneck layers inserted within each layer of a pre-trained model— to ameliorate this issue by avoiding full fine-tuning of the entire model. Thus, adapters encode task-specific representations in the layers of the pre-trained model: 
+
+<p align="center">
+  <img src="https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/adapters.png" width="60%">
+</p>
+
+The adapters are encapsulated. This setting allows for modularity of components such that adapters can be stacked on top of each other or replaced dynamically, combining several relevant information sources. The authors note two most common problems catastrophic forgetting where information learned during earlier stages of training is “overwritten”, catastrophic interference where the performance of a set of tasks deteriorates when adding new tasks, and intricate task weighting for tasks with different distributions. The encapsulation of adapters forces them to learn output representations that are compatible
+across tasks. Multiple adapters can then be combined, e.g., with attention ([MAD-X: An Adapter-Based Framework for
+Multi-Task Cross-Lingual Transfer](https://arxiv.org/pdf/2005.00052.pdf) `Pfeiffer et al., 2020`).  Because the respective adapters are trained separately, the necessity of sampling heuristics due to skewed data set sizes no longer arises. By separating knowledge extraction and composition, adapters mitigate the two most common pitfalls of multi-task learning, catastrophic forgetting, and catastrophic interference. [AdapterHub](https://adapterhub.ml/), a framework that allows dynamic “stitching-in” of pre-trained adapters for different tasks and languages. The framework, built on top of the popular HuggingFace Transformers library.
+
+10. [Conditionally Adaptive Multi-Task Learning: Improving Transfer Learning in NLP Using Fewer Parameters & Less Data](https://arxiv.org/abs/2009.09139) (CA-MTL, `Pilaut et al., 2020`) - the authors of this paper propose a novel Multi-Task architecture based on Adapters that facilitate efficient parameter sharing and improves performance on GLUE and SuperGLUE compared to other Adapter architectures. The proposed architecture consists of trainable Task Embedding and Conditional Alignment layers and also half of the original Transformer layers is fine-tuned with Adapter (consisted of Conditional Attention, Conditional Layer Normalization and Bottleneck layer). Altogether this allows to fine-tune simultaneously on several datasets (without training each adapter separately), while sharing most of the parameters.
   
 <p align="center">
   <img src="https://i.ibb.co/0t3LVY3/CA-MTL.png" width="60%">
