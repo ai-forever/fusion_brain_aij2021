@@ -100,3 +100,10 @@ Multitask training is employed in the pre-training stage to optimize all pre-tra
 
 The authors conduct experiments on benchmarks GLUE and SuperGLUE (NLP and NLU tasks), using the base T5 model with HyperGrid layers. Results show a single model with performance (Avg 85.0 on GLUE and 73.6 on SuperGLUE), not far below the quality finetuned T5 model (Avg 85.7 on GLUE and 74.8 on SuperGLUE), while being 16 times more parameter efficient. 
  
+9. [Conditionally Adaptive Multi-Task Learning: Improving Transfer Learning in NLP Using Fewer Parameters & Less Data](https://arxiv.org/abs/2009.09139) (CA-MTL, `Pilaut et al., 2020`) - the authors of this paper propose a novel Multi-Task architecture based on Adapters that facilitate efficient parameter sharing and improves performance on GLUE and SuperGLUE compared to other Adapter architectures. The proposed architecture consists of trainable Task Embedding and Conditional Alignment layers and also half of the original Transformer layers is fine-tuned with Adapter (consisted of Conditional Attention, Conditional Layer Normalization and Bottleneck layer). Altogether this allows to fine-tune simultaneously on several datasets (without training each adapter separately), while sharing most of the parameters.
+  
+<p align="center">
+  <img src="https://i.ibb.co/0t3LVY3/CA-MTL.png" width="60%">
+</p>
+
+To mitigate the negative effects of data imbalance across tasks Multi-Task Unceratinty Sampling strategy is proposed. Among randomly selected examples only those with the highest model uncertainty (measured by Shannon's Enthropy) form the batch on each iteration. All tricks combined allow authors to train only 1.12x parameters (instead of 24x for fine-tuning on each separate task) and surpass other Adapter-based models on GLUE and SuperGLUE. Their model also outperform other models on zero- and few-shot setting.
