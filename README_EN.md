@@ -74,8 +74,8 @@ After that, correct answers in the ```true_{TASK_NAME}.json``` format shall be 
 
 This [link](https://drive.google.com/uc?export=download&id=1nxDL9NvgSyC_-LAIVgqnKMJzIOQ-UH5m) is for the `baseline_submission.zip` archive, which contains sample submission, model inputs and correct answers. The archive consists of the following files:
 
-* `input` - samples of input data for each of the tasks. This folder should not be included to the archive with the solution uploaded to the platform, it is placed by the system in the container with participant solution;
-* `output` - samples of model predictions for files from a folder `input`. These are random predictions and only show the correct format that is expected from the participant model. This folder should not be included to the archive with the solution uploaded to the platform: it is created during the launch of the model in the container;
+* `input` - samples of input data for each of the tasks. This folder should not be included to the archive with the solution uploaded to the platform, it is placed by the system in the container with participant's solution;
+* `output` - samples of model predictions for files from a folder `input`. These are random predictions and only show the correct format that is expected from the participant's model. This folder should not be included to the archive with the solution uploaded to the platform: it is created during the launch of the model in the container;
 * `true` - samples of files with correct answers for each problem, the predictions from `output` are compared with them during the calculation of the metrics. This folder should not be included to the archive with the solution uploaded to the platform.
 
 The following files in the archive are required to generate model predictions:
@@ -84,10 +84,10 @@ The following files in the archive are required to generate model predictions:
  * `run.py` - main model inference script
  * `last.pt` - model weights that are loaded during the execution of the `run.py` script
  * `utils` - folder with auxiliary scripts for `run.py`. In the case of a baseline, it contains two files:
-     * `dataset.py` - code for DatasetRetriever class and the fb_collate_fn function
+     * `dataset.py` - code for `DatasetRetriever` class and `fb_collate_fn` function
      * `fb_model.py` - code for creating the model class
- * `gpt_init` - folder with necessary files for initialization `GPT2Tokenizer` and `GPT2Model`
- * `fb_utils` - additional set of scripts; repeats, with some exceptions, the same folder from `fb_baseline` in this repository.
+ * `gpt_init` - folder with necessary files for `GPT2Tokenizer` and `GPT2Model` initialization
+ * `fb_utils` - additional set of scripts; it is analogous (with some exceptions) to the same subfolder from `fb_baseline` folder in this repository.
 
 ## Limitations
 
