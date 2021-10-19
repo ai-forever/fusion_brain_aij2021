@@ -38,7 +38,7 @@ To run solutions, you can use the following environment:
 
 * ```cr.msk.sbercloud.ru/aijcontest2021/fusion:0.0.1``` - [Dockerfile и requirements](https://drive.google.com/file/d/1JGv-khEGv8tFD6wAiLJIP6qocd0CUZIJ/view?usp=sharing) for this image.
 
-If necessary, you can create your custom image by adding the necessary software and libraries to it ([instructions for creating docker images](https://github.com/sberbank-ai/no_fire_with_ai_aij2021/blob/main/sbercloud_instruction.md)); to use it you need to publish it on ```sbercloud```. Custom images must be inherited from base images ```sbercloud``` ([base images](https://docs.sbercloud.ru/aicloud/mlspace/concepts/environments__basic-images-for-training.html)). When creating a custom image, you must assign it an individual name and tag (for example ```my_custom_fusionchallenge: 0.0.5```).
+If necessary, you can create your custom image by adding the necessary software and libraries to it ([instructions for creating docker images](https://github.com/sberbank-ai/no_fire_with_ai_aij2021/blob/main/sbercloud_instruction.md)); to use it you need to publish it on ```sbercloud```. Custom images must be inherited from base `sbercloud` images ([base images](https://docs.sbercloud.ru/aicloud/mlspace/concepts/environments__basic-images-for-training.html)). When creating a custom image, you must assign it an individual name and tag (for example ```my_custom_fusionchallenge: 0.0.5```).
 
 The `input` folder is placed in the container. Names of ```input``` subfolders shall correspond to names of subtasks to be completed by the single model. Each subfolder (C2C, HTR, zsOD, VQA) shall have the content needed for predictions.
 
