@@ -80,18 +80,18 @@ def evaluate(true_annot, predictions):
                 fn += len(true)
 
             else:
+                
+                fn += max(0, len(true) - len(pred))
 
-                pairs = list(itertools.product(true, pred))
+                pairs = list(itertools.product(pred, true))
                 pairs_iou = [(el[0], el[1], iou(xywh_to_xyxy(el[0]), xywh_to_xyxy(el[1]))) for el in pairs]
-                for _, group in itertools.groupby(pairs_iou, key=lambda x: x[0]):  # true
-                    if np.all(np.array([i for _, _, i in group]) < 0.5):
-                        fn += 1
-
-                for _, group in itertools.groupby(sorted(pairs_iou, key=lambda x: x[1]), key=lambda x: x[1]):  # pred
+                
+                for _, group in itertools.groupby(pairs_iou, key=lambda x: x[0]):  # pred
                     if np.all(np.array([i for _, _, i in group]) < 0.5):
                         fp += 1
                     else:
                         tp += 1
+                        
 
     if (tp + fn) > 0:
         recall = tp / (tp + fn)
