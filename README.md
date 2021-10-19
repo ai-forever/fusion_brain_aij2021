@@ -26,7 +26,7 @@ The English version of the document can be found [here](https://github.com/sberb
 ```
 {
     "image": "cr.msk.sbercloud.ru/aicloud-base-images/horovod-cuda10.1-tf2.3.0:latest",
-    "entry_point": "python /home/jovyan/run.py"
+    "entrypoint": "python /home/jovyan/run.py"
 }
 ```
 
