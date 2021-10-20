@@ -5,8 +5,8 @@ import gdown
 
 DATASETS_ID = {
     'handwritten': '1ptSVo4VEE-ed8-8NMg-DOhhBc9uGlFgK',
-    'detection': '',
-    'vqa': '',
+    'detection': '1kVFvoz6jDXckEtBQRg3pkQB_qVbsAAMG',
+    'vqa': '1YK9vryTt8Dv4ftz-JqHohTG4aCM_6W4A',
     'c2c': '1YnrXdckRIiykCkz61cnW_b1x4angrbJl',
     'saved_models': '1Zd8isAp0lqgU95Xtn01R9df251NmY46X',
 }
