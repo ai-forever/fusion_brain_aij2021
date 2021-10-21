@@ -22,7 +22,8 @@ Uploading solutions to the Competition platform will become available from **07/
 
 Participants should create a zip archive with a trained model and a set of scripts for model prediction. The solutions are run in an isolated environment using Docker. Time and resources during testing are limited. The participant does not need to dive into Docker technology.
 
-The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container. Solutions may be run with the use of any image available for downloading from DockerHub. If necessary, you can prepare your own image, add necessary software and libraries to it (see the manual on creating Docker images); to use it, you will need to publish it on DockerHub.
+The participant shall upload this archive to the competition platform. Then, the archive shall be unzipped to a docker container. Solutions may be run with the use of any image available for downloading from DockerHub. 
+
 
 The archive root must contain the metadata.json file containing the following:
 ```
