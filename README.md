@@ -78,7 +78,7 @@ The English version of the document can be found [here](https://github.com/sberb
 * `detection_vqa.py` - скрипт, в который вынесены функции потерь, слои feedforward и cross-attention, а также вспомогательные функции для задач zsOD и VQA
 * `download.py` - скрипт загрузки файлов для обучения
 * `handwritten.py` - скрипт с вспомогательными функциями для задачи HTR
-* `metrics.py` - подсчет метрик всех 4-х задач.
+* `metrics.py` - подсчет метрик всех 4-х подзадач.
 
 На следующем рисунке представлена схема предлагаемой архитектуры:
 
