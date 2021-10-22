@@ -22,7 +22,7 @@ Uploading solutions to the Competition platform will become available from **07/
 
 Participants should create a zip archive with a trained model and a set of scripts for model prediction. The solutions are run in an isolated environment using Docker. Time and resources during testing are limited. The participant does not need to dive into Docker technology.
 
-The archive root must contain the metadata.json file containing the following:
+The archive root must contain the `metadata.json` file containing the following:
 ```
 {
     "image": "cr.msk.sbercloud.ru/aijcontest2021/fusion:0.0.1",
