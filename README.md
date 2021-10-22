@@ -83,7 +83,7 @@ The English version of the document can be found [here](https://github.com/sberb
 На следующем рисунке представлена схема предлагаемой архитектуры:
 
 <p align="center">
-  <img src="fb_baseline/FusionBrain.png" width="60%">
+  <img src="fb_baseline/FusionBrain.png" width="70%">
 </p>
 
 По этой [ссылке](https://www.youtube.com/watch?v=cNEsBWXmJqY&t=5982s) можно посмотреть запись вебинара с подробным разбором бейзлайна.
