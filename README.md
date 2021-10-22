@@ -117,6 +117,7 @@ The English version of the document can be found [here](https://github.com/sberb
 На следующем рисунке представлена схема предлагаемой архитектуры:
 ![image](fb_baseline/FusionBrain.png)
 
+По этой [ссылке](https://www.youtube.com/watch?v=cNEsBWXmJqY&t=5982s) можно посмотреть запись вебинара с подробным разбором бейзлайна.
 
 # Подзадача 1 - Code2code Translation
 
