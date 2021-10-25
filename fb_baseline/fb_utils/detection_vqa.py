@@ -87,8 +87,7 @@ class CrossAttentionLayer(nn.Module):
 ## Evaluation part ##
 def vqa_evaluation(model, images, tokens, attention_masks, max_answer_length):
     back_out = model.backbone(images)
-    patchs = model.input_proj(back_out).flatten(-2)
-    patchs = model.vqa_max_pool(patchs).transpose(-1, -2)
+    patchs = model.input_proj(back_out).flatten(-2).transpose(-1, -2)
     gpt_img = model.gpt_model(inputs_embeds=patchs).last_hidden_state
     
     answer_logits = []
@@ -109,20 +108,27 @@ def vqa_evaluation(model, images, tokens, attention_masks, max_answer_length):
 
     return torch.stack(answer_logits, dim=1)
 
-def detection_evaluation(model, images, input_ids, attention_masks, treshhold):
+def detection_evaluation(model, images, input_ids, attention_masks, cor_treshhold, treshhold):
     back_out = model.backbone(images)
-    patchs = model.input_proj(back_out).flatten(-2)
-    patchs = model.vqa_max_pool(patchs).transpose(-1, -2)
+    patchs = model.input_proj(back_out).flatten(-2).transpose(-1, -2)
     gpt_img = model.gpt_model(inputs_embeds=patchs).last_hidden_state
+    norm_gpt_img = F.normalize(gpt_img, p=2, dim=-1)
     
     boxes = []
     for tokens, attention_mask in zip(input_ids, attention_masks):
         gpt_text = model.gpt_model(input_ids=tokens, attention_mask=attention_mask).last_hidden_state
+        norm_gpt_text = F.normalize(gpt_text, p=2, dim=-1)
+        corr_matrix = torch.matmul(norm_gpt_img, norm_gpt_text.transpose(-1, -2))
+        cut_gpt_img = gpt_img[corr_matrix.mean(-1) > cor_treshhold].unsqueeze(0)
+        if cut_gpt_img[1] == 0:
+            boxes.append(torch.tensor([]).to(cut_gpt_img.device))
+            continue
         text_mask = attention_mask.type(torch.bool)
         for layer in model.cross_attention:
-            gpt_img, _ = layer(gpt_img, gpt_text, ~text_mask)
-            
-        output_logits = model.bbox_embed(gpt_img).sigmoid()
+            cut_gpt_img, _ = layer(cut_gpt_img, gpt_text, ~text_mask)
+        cut_gpt_img = model.detection_pool(cut_gpt_img)
+        
+        output_logits = model.bbox_embed(cut_gpt_img).sigmoid()
         output_boxes = output_logits[output_logits[:, :, -1] > treshhold][:, :-1]
         boxes.append(output_boxes)
     
@@ -147,52 +153,43 @@ class DetectionCriterion(nn.Module):
     
     def _get_idx(self, pred_boxes, targets):
         boxes_idx = list(map(
-            lambda x: torch.argmax(generalized_box_iou(box_xywh_to_xyxy(x[0]), box_xywh_to_xyxy(x[1])), -1),
+            lambda x: torch.argmax(generalized_box_iou(box_xywh_to_xyxy(x[0]), box_xywh_to_xyxy(x[1][:, :-1])), -1),
             zip(targets, pred_boxes)
         ))
-        batch_idx = torch.cat([torch.tensor([i] * idx.shape[0]) for i, idx in enumerate(boxes_idx)])
-        boxes_idx = torch.cat(boxes_idx)
         
-        return batch_idx, boxes_idx
+        return boxes_idx
         
-    def loss_classification(self, outputs, targets, batch_idx, boxes_idx, num_boxes):
-        pred_probs = outputs['pred_logits'][:, :, -1]
-        target_labels = torch.zeros_like(pred_probs)
-        target_labels[batch_idx, boxes_idx] = 1.
-        loss = -(target_labels * torch.log(pred_probs) + (1. - target_labels) * torch.log(1. - pred_probs)).mean()
+    def loss_classification(self, outputs, targets, boxes_idx, num_boxes):
+        pred_probs = [t[:, -1] for t in outputs["pred_logits"]]
+        target_labels = [torch.zeros_like(pred_prob) for pred_prob in pred_probs]
+        for i, idx in enumerate(boxes_idx):
+            target_labels[i][idx] = 1.
+        
+        pred_probs = torch.cat(pred_probs)
+        target_labels = torch.cat(target_labels)
+        loss = F.binary_cross_entropy(pred_probs, target_labels)
         
         return {"loss_classification": loss}
     
-    def loss_contrastive_align(self, outputs, targets, batch_idx, boxes_idx, num_boxes):
-        bs, num_queries = outputs["pred_logits"].shape[:2]
-        normalized_text_emb = outputs["proj_tokens"]
-        normalized_img_emb = outputs["proj_queries"]
-        object_norm = bs * num_queries
-        token_norm = bs * normalized_text_emb.shape[1]
-
-        batch_logits = torch.matmul(normalized_img_emb, normalized_text_emb.transpose(-1, -2)) / self.temperature
-        logits = torch.matmul(normalized_img_emb, normalized_text_emb.flatten(0, 1).transpose(-1, -2)) / self.temperature
-        masked_logits = batch_logits.masked_fill(batch_logits.bool(), 1.)
+    def loss_contrastive(self, outputs, targets, boxes_idx, num_boxes):
+        norm_img_emb = outputs['proj_queries']
+        norm_tokens_emb = outputs['proj_tokens']
+        corr_tensor = torch.tensordot(norm_img_emb, norm_tokens_emb.permute(2, 0, 1), dims=1).transpose(1, 2)
+        corr_matrix = corr_tensor.mean((-1, -2)) * np.exp(self.temperature)
         
-        object_log_norm = logits.logsumexp(-1).sum()
-        align_object_logits = batch_logits.sum(-1) / masked_logits.sum(-1)
-        align_object_logits = align_object_logits[batch_idx, boxes_idx].sum()
-        objects_loss = object_log_norm - align_object_logits
+        bs = corr_matrix.shape[0]
+        labels = torch.arange(bs).to(corr_matrix.device)
+        loss_tok2obj = F.cross_entropy(corr_matrix, labels)
+        loss_obj2tok = F.cross_entropy(corr_matrix.transpose(0, 1), labels)
         
-        token_log_norm = logits.logsumexp(-2).sum()
-        div_by_batch = batch_idx.unique(return_counts=True)[1].to(logits.device)
-        align_token_logits = batch_logits / div_by_batch.unsqueeze(-1).unsqueeze(-1)
-        align_token_logits = align_token_logits[batch_idx, boxes_idx].sum()
-        token_loss = token_log_norm - align_token_logits
-        
-        contrastive_loss = (objects_loss / object_norm + token_loss / token_norm) / 2.
+        contrastive_loss = (loss_tok2obj + loss_obj2tok) / 2.
 
         return {
             "loss_contrastive": contrastive_loss
         }
     
-    def loss_boxes(self, outputs, targets, batch_idx, boxes_idx, num_boxes):
-        src_boxes = outputs["pred_logits"][batch_idx, boxes_idx, :-1]
+    def loss_boxes(self, outputs, targets, boxes_idx, num_boxes):
+        src_boxes = torch.cat([t[idx][:, :-1] for t, idx in zip(outputs["pred_logits"], boxes_idx)], dim=0)
         target_boxes = torch.cat([t for t in targets], dim=0)
 
         loss_bbox = F.l1_loss(src_boxes, target_boxes, reduction="none")
@@ -200,7 +197,7 @@ class DetectionCriterion(nn.Module):
         losses = {}
         losses["loss_bbox"] = loss_bbox.sum() / num_boxes
 
-        loss_giou = 1 - torch.diag(
+        loss_giou = 1. - torch.diag(
             generalized_box_iou(
                 box_xywh_to_xyxy(src_boxes), box_xywh_to_xyxy(target_boxes)
             )
@@ -209,24 +206,25 @@ class DetectionCriterion(nn.Module):
         
         return losses
 
-    def get_loss(self, loss, outputs, targets, batch_idx, boxes_idx, num_boxes, **kwargs):
+    def get_loss(self, loss, outputs, targets, boxes_idx, num_boxes, **kwargs):
         loss_map = {
             "classification": self.loss_classification,
-            "contrastive_align": self.loss_contrastive_align,
+            "contrastive": self.loss_contrastive,
             "boxes": self.loss_boxes
         }
         assert loss in loss_map, f"do you really want to compute {loss} loss?"
         
-        return loss_map[loss](outputs, targets, batch_idx, boxes_idx, num_boxes, **kwargs)
+        return loss_map[loss](outputs, targets, boxes_idx, num_boxes, **kwargs)
 
     
     def forward(self, outputs, targets):
-        batch_idx, boxes_idx = self._get_idx(outputs['pred_logits'][:, :, :-1], targets)
+        boxes_idx = self._get_idx(outputs["pred_logits"], targets)
         num_boxes = float(sum([boxes.shape[0] for boxes in targets]))
 
         losses = {}
         for loss in self.losses:
-            losses.update(self.get_loss(loss, outputs, targets, batch_idx, boxes_idx, num_boxes))
+            losses.update(self.get_loss(loss, outputs, targets, boxes_idx, num_boxes))
             
         return losses
 ############
+
