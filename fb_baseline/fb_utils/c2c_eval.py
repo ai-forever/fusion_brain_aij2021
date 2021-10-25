@@ -2,7 +2,7 @@ import torch
 from BLEU import _bleu
 import numpy as np
 
-def eval_bleu(model, hidden_states, input_ids, beam_size, tokenizer, targets, path_gold='./test.gold', path_pred='./test.output'):
+def eval_bleu(model, hidden_states, input_ids, beam_size, tokenizer, targets, max_length=170, path_gold='./test.gold', path_pred='./test.output'):
     preds = []
     m = torch.nn.LogSoftmax(dim=-1)
     p = []
@@ -13,7 +13,7 @@ def eval_bleu(model, hidden_states, input_ids, beam_size, tokenizer, targets, pa
     for i in range(input_ids.shape[0]):
         past_hidden = [x[:, i:i + 1].expand(-1, beam_size, -1, -1, -1) for x in hidden_states]
         beam = Beam(beam_size, tokenizer.bos_token_id, tokenizer.eos_token_id)
-        for _ in range(170):
+        for _ in range(max_length):
             if beam.done():
                 break
             input_ids = beam.getCurrentState()
@@ -25,7 +25,7 @@ def eval_bleu(model, hidden_states, input_ids, beam_size, tokenizer, targets, pa
         hyp = beam.getHyp(beam.getFinal())
         pred = beam.buildTargetTokens(hyp)[:beam_size]
         
-        pred = [torch.cat([x.view(-1) for x in p] + [zero] * (170 - len(p))).view(1, -1) for p in pred]
+        pred = [torch.cat([x.view(-1) for x in p] + [zero] * (max_length - len(p))).view(1, -1) for p in pred]
         p.append(torch.cat(pred, 0).unsqueeze(0))
     p = torch.cat(p, 0)
     for pred in p:
