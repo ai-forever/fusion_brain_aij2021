@@ -120,7 +120,7 @@ def detection_evaluation(model, images, input_ids, attention_masks, cor_treshhol
         norm_gpt_text = F.normalize(gpt_text, p=2, dim=-1)
         corr_matrix = torch.matmul(norm_gpt_img, norm_gpt_text.transpose(-1, -2))
         cut_gpt_img = gpt_img[corr_matrix.mean(-1) > cor_treshhold].unsqueeze(0)
-        if cut_gpt_img[1] == 0:
+        if cut_gpt_img.shape[1] == 0:
             boxes.append(torch.tensor([]).to(cut_gpt_img.device))
             continue
         text_mask = attention_mask.type(torch.bool)
