@@ -122,7 +122,7 @@ The solution container will be run under the following conditions:
 * 100 GB RAM
 * 3 vCPU
 * 1 GPU Tesla V100 (32 GB)
-* Time for performance: 30m
+* Time for performance: 90m
 * Offline solution
 * Maximum size of your solution archive compressed and decompressed: 10 GB
 * Maximum size of the Docker image used: 15 GB.
