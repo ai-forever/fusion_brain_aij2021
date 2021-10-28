@@ -4,7 +4,7 @@
 
 * In the **Sample submission** section, we added a reference to the current sample submission and references to examples of input/output data.
 * We specified the subtask **HTR** by reference from section **Sample submission**. You can download a test dataset containing the collected and labeled images with text from school notebooks (in Russian and English).  Note that test public, in addition to standard ones, contains examples with a vertical orientation (rotated by 90 degrees). The data distribution in the handwritten dataset of notebooks in English differs from the data distribution of the **IAM** dataset, so we advise applying different types of normalization, augmentation - and learn not only by **IAM**.
-* In section **Data* VQA task added a reference to the dataset, a subsample of VQA v2 (train) that intersects with the Visual Genome training sample - these are questions with answers (in Russian and English) for 33,821 images.
+* In section **Data** VQA task added a reference to the dataset, a subsample of VQA v2 (train) that intersects with the Visual Genome training sample - these are questions with answers (in Russian and English) for 33,821 images.
 
 
 ## General task description
