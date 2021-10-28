@@ -1,5 +1,13 @@
 # Fusion Brain Challenge
+## Update
+27.10:
 
+* In the **Sample submission** section, we added a reference to the current sample submission and references to examples of input/output data.
+* We specified the subtask **HTR** by reference from section **Sample submission**. You can download a test dataset containing the collected and labeled images with text from school notebooks (in Russian and English).  Note that test public, in addition to standard ones, contains examples with a vertical orientation (rotated by 90 degrees). The data distribution in the handwritten dataset of notebooks in English differs from the data distribution of the **IAM** dataset, so we advise applying different types of normalization, augmentation - and learn not only by **IAM**.
+* In section **Data* VQA task added a reference to the dataset, a subsample of VQA v2 (train) that intersects with the Visual Genome training sample - these are questions with answers (in Russian and English) for 33,821 images.
+
+
+## General task description
 The current task suggests developing a single multitask model that would successfully solve such multimodality subtasks as **Code2code Translation (С2С), Handwritten Text Recognition (HTR), Zero-shot Object Detection (zsOD), Visual Question Answering (VQA)** and be able to surpass the minimum value of the integral metric established by the Arranger, as well as the minimum values of the metrics for each of the sub-tasks. 
 
 We provide [a concept of a single model](https://colab.research.google.com/drive/1YAkxWG0dRKPtqy9CZxFPvCNCCXvMGr65?usp=sharing%22%20target%3D%22_parent%22%3E%3Cimg%20src%3D%22https%3A%2F%2Fcolab.research.google.com%2Fassets%2Fcolab-badge.svg%22%20alt%3D%22Open%20In%20Colab) that is trained on several tasks related to different modalities (visual, audio and text). The concept is inspired by an article ["Pretrained Transformers as Universal Computations Engines"](https://arxiv.org/pdf/2103.05247.pdf) (```Lu et al., 2021```) that examines the ability of pretrained language models based on the Transformer architecture to form qualitative representations of arbitrary data sequences – thus, generalizing to other modalities with minimal finetuning. The basis of the architecture proposed in the concept is the pretrained GPT-2 language model; experiments are carried out both with a "frozen" model (Frozen Pretrained Transformer), and with a model in which all layers are trained on three modalities simultaneously.
