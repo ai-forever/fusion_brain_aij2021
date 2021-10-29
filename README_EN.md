@@ -1,10 +1,15 @@
 # Fusion Brain Challenge
 ## Update
-27.10:
+
+**27.10**:
 
 * In the **Sample submission** section, we added a reference to the current sample submission and references to examples of input/output data.
 * We specified the subtask **HTR** by reference from section **Sample submission**. You can download a test dataset containing the collected and labeled images with text from school notebooks (in Russian and English).  Note that test public, in addition to standard ones, contains examples with a vertical orientation (rotated by 90 degrees). The data distribution in the handwritten dataset of notebooks in English differs from the data distribution of the **IAM** dataset, so we advise applying different types of normalization, augmentation - and learn not only by **IAM**.
 * In section **Data** VQA task added a reference to the dataset, a subsample of VQA v2 (train) that intersects with the Visual Genome training sample - these are questions with answers (in Russian and English) for 33,821 images.
+
+**28.10**:
+
+* We remind that there are images rotated 90 degrees counterclockwise in the public test. In a private test, however, there won't be such images. At this [link](https://dsworks.s3pd01.sbercloud.ru/aij2021/sample_data/rotate.zip) you can find an archive that contains the file `rotate.json` - a list of images from the public test that needs to be rotated 90 degrees clockwise. An example of using this file is shown in the `rotate.py` script inside the archive. You can use this json in your solution script to rotate the desired images. This will only affect the value of the public leaderboard metric; it is useless for a private test, as there won't be vertical images. In the dataset of Russian notebooks presented for training, as in the IAM, there are no rotated images, so it makes no sense to specifically teach the model to rotate images.
 
 
 ## General task description
