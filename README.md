@@ -6,7 +6,7 @@ The English version of the document can be found [here](https://github.com/sberb
 
 **01.11**
 
-* Мы выкладываем пример данных из private test по HTR ([ссылка](https://dsworks.s3pd01.sbercloud.ru/aij2021/sample_data/sample_private.zip)). В данном примере 200 сэмплов, одна половина из которых - на английском, другая половина - на русском. В приватной части датасета перевернутых изображений не будет.
+* Мы выкладываем пример данных, аналогичных private test по HTR ([ссылка](https://dsworks.s3pd01.sbercloud.ru/aij2021/sample_data/sample_private.zip)). В данном примере 200 сэмплов, одна половина из которых - на английском, другая половина - на русском. В приватной части датасета перевернутых изображений не будет.
 
 **28.10**:
 
