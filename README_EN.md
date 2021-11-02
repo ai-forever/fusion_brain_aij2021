@@ -1,16 +1,15 @@
 # Fusion Brain Challenge
 ## Update
 
+**28.10**:
+
+* We remind that there are images rotated 90 degrees counterclockwise in the public test. In a private test, however, there won't be such images. At this [link](https://dsworks.s3pd01.sbercloud.ru/aij2021/sample_data/rotate.zip) you can find an archive that contains the file `rotate.json` - a list of images from the public test that needs to be rotated 90 degrees clockwise. An example of using this file is shown in the `rotate.py` script inside the archive. You can use this json in your solution script to rotate the desired images. This will only affect the value of the public leaderboard metric; it is useless for a private test, as there won't be vertical images. In the dataset of Russian notebooks presented for training, as in the IAM, there are no rotated images, so it makes no sense to specifically teach the model to rotate images.
+
 **27.10**:
 
 * In the **Sample submission** section, we added a reference to the current sample submission and references to examples of input/output data.
 * We specified the subtask **HTR** by reference from section **Sample submission**. You can download a test dataset containing the collected and labeled images with text from school notebooks (in Russian and English).  Note that test public, in addition to standard ones, contains examples with a vertical orientation (rotated by 90 degrees). The data distribution in the handwritten dataset of notebooks in English differs from the data distribution of the **IAM** dataset, so we advise applying different types of normalization, augmentation - and learn not only by **IAM**.
 * In section **Data** VQA task added a reference to the dataset, a subsample of VQA v2 (train) that intersects with the Visual Genome training sample - these are questions with answers (in Russian and English) for 33,821 images.
-
-**28.10**:
-
-* We remind that there are images rotated 90 degrees counterclockwise in the public test. In a private test, however, there won't be such images. At this [link](https://dsworks.s3pd01.sbercloud.ru/aij2021/sample_data/rotate.zip) you can find an archive that contains the file `rotate.json` - a list of images from the public test that needs to be rotated 90 degrees clockwise. An example of using this file is shown in the `rotate.py` script inside the archive. You can use this json in your solution script to rotate the desired images. This will only affect the value of the public leaderboard metric; it is useless for a private test, as there won't be vertical images. In the dataset of Russian notebooks presented for training, as in the IAM, there are no rotated images, so it makes no sense to specifically teach the model to rotate images.
-
 
 ## General task description
 The current task suggests developing a single multitask model that would successfully solve such multimodality subtasks as **Code2code Translation (С2С), Handwritten Text Recognition (HTR), Zero-shot Object Detection (zsOD), Visual Question Answering (VQA)** and be able to surpass the minimum value of the integral metric established by the Arranger, as well as the minimum values of the metrics for each of the sub-tasks. 
@@ -21,7 +20,7 @@ We provide [a concept of a single model](https://colab.research.google.com/drive
 
 In order for the model presented by the team/participant to be considered as multitask, it is necessary and sufficient to meet the following criteria:
 
-1) shared weights should be **at least 30%** of all model parameters: *if ![image](https://latex.codecogs.com/svg.image?\color{Blue}N) is the total number of parameters of the models that solve 4 subtasks, and ![image](https://latex.codecogs.com/svg.image?\color{Blue}M) is the number of common parameters of these models (that is, they are identical both in value and architecturally), then it is necessary that ![image](https://latex.codecogs.com/svg.image?\color{Blue}M/N\geqslant&space;0.3)*
+1) shared weights should be **at least 25%** of all model parameters: *if ![image](https://latex.codecogs.com/svg.image?\color{Blue}N) is the total number of parameters of the models that solve 4 subtasks, and ![image](https://latex.codecogs.com/svg.image?\color{Blue}M) is the number of common parameters of these models (that is, they are identical both in value and architecturally), then it is necessary that ![image](https://latex.codecogs.com/svg.image?\color{Blue}M/N\geqslant&space;0.3)*
 
 2) common parameters should not be purely nominal - on the contrary, they should be used in a **meaningful** way during the prediction of the model and have a **beneficial** effect on model’s quality.
 
@@ -294,7 +293,7 @@ Scores for each subtask will take values from 0 to 1 (the only exception is the 
 
 # Prize pool
 
-The possible Prize depends on whether the proposed architecture is a single mulitask model (with at least 30% of shared weights – parameters which are common to all modalities) or a unitask model (solving one subtask).
+The possible Prize depends on whether the proposed architecture is a single mulitask model (with at least 25% of shared weights – parameters which are common to all modalities) or a unitask model (solving one subtask).
 
 For each winning place there is a fixed prize (FIX). The bonus shall depend on the winners’ final scores, but not exceeding the difference between the maximum (MAX) and fixed value. It is necessary to surpass the minimum values of the metrics established for each subtask — and, consequently, the minimum value of the integral metric.
 
@@ -304,7 +303,7 @@ The minimum values for each of the subtasks are the following:
 
 The minimum value of the integral score S<sub>min</sub> is calculated as follows:
 
-![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{S}_{min}&space;=&space;\textrm{S}_{min}^{1}&space;&plus;&space;\textrm{S}_{min}^{2}&space;&plus;&space;\textrm{S}_{min}^{3}&space;&plus;&space;\textrm{S}_{min}^{4}&space;=&space;0.2&space;&plus;&space;0.6&space;&plus;&space;0.15&space;&plus;&space;0.35&space;=&space;1.3)
+![image](https://latex.codecogs.com/svg.image?\color{Blue}\textrm{S}_{min}&space;=&space;\textrm{S}_{min}^{1}&space;&plus;&space;\textrm{S}_{min}^{2}&space;&plus;&space;\textrm{S}_{min}^{3}&space;&plus;&space;\textrm{S}_{min}^{4}&space;=&space;0.2&space;&plus;&space;0.3&space;&plus;&space;0.1&space;&plus;&space;0.25&space;=&space;0.85)
 
 The prize amount shall be calculated according to the following formula:
 
@@ -314,7 +313,7 @@ The prize amount shall be calculated according to the following formula:
 
 ![image](https://latex.codecogs.com/svg.image?\color{Blue}\alpha_{place}&space;=&space;\frac{\textrm{MAX}_{place}&space;-&space;\textrm{FIX}_{place}}{2.3&space;-&space;(\textrm{S}_{baseline}&space;&plus;&space;\delta)},)
 
-where α<sub>place</sub> is a coefficient for calculating the bonus for the first, second and third places in the leaderboard (α_1 = 2, α_2 = 1, α_3 = 0.6) for cases, where S<sub>min</sub> ≤ S < 2.3. MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIX<sub>place</sub> is a fixed prize for top solutions in the leaderboard with S<sub>min</sub> ≤ S < 2.3 (FIX<sub>1</sub> = RUB 1 million, FIX<sub>2</sub> = RUB 0.5 million, FIX<sub>3</sub> = RUB 0.2 million).
+where α<sub>place</sub> is a coefficient for calculating the bonus for the first, second and third places in the leaderboard (α_1 = 1.379, α_2 = 0.689, α_3 = 0.413) for cases, where S<sub>min</sub> ≤ S < 2.3. MAX<sub>place</sub> is the highest prize for Top-3 solutions in the leaderboard with S ≥ 2.3 (MAX<sub>1</sub> = RUB 3 million, MAX<sub>2</sub> = RUB 1.5 million, MAX<sub>3</sub> = RUB 0.8 million). FIX<sub>place</sub> is a fixed prize for top solutions in the leaderboard with S<sub>min</sub> ≤ S < 2.3 (FIX<sub>1</sub> = RUB 1 million, FIX<sub>2</sub> = RUB 0.5 million, FIX<sub>3</sub> = RUB 0.2 million).
     
 ![image](https://dsworks.s3pd01.sbercloud.ru/aij2021/misc/prize_plot_en.png)
 
