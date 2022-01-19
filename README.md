@@ -1,5 +1,7 @@
 # Fusion Brain Challenge
 
+Preprint: https://arxiv.org/pdf/2111.10974.pdf
+
 The English version of the document can be found [here](https://github.com/sberbank-ai/fusion_brain_aij2021/blob/main/README_EN.md).
 
 ## Обновления
